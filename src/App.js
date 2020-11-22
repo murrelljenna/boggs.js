@@ -1,4 +1,6 @@
 import logo from './logo.svg';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Contacts from './components/Contacts.js';
 import './App.css';
 
 function App() {
@@ -18,6 +20,11 @@ function App() {
           Learn React
         </a>
       </header>
+      <main>
+        <Switch>
+          <Route path='/contacts/' component={Contacts} />
+        </Switch>
+      </main>
     </div>
   );
 }
