@@ -9,7 +9,22 @@ import axios from 'axios';
 import { ITableProps, kaReducer, Table } from 'ka-table';
 import { DataType, EditingMode, SortingMode } from 'ka-table/enums';
 import { DispatchFunc } from 'ka-table/types';
-import { closeRowEditors, openRowEditors, saveRowEditors } from 'ka-table/actionCreators';
+import { closeRowEditors, openRowEditors, saveRowEditors, showNewRow, saveNewRow, hideNewRow, deleteRow } from 'ka-table/actionCreators';
+
+const AddButton = ({
+  dispatch,
+}) => {
+ return (
+  <div className='plus-cell-button'>
+    <img
+      src='https://komarovalexander.github.io/ka-table/static/icons/plus.svg'
+      alt='Add New Row'
+      title='Add New Row'
+      onClick={() => dispatch(showNewRow())}
+    />
+  </div>
+ );
+};
 
 const EditButton = ({
   dispatch, rowKeyValue
@@ -24,6 +39,40 @@ const EditButton = ({
     />
    </div>
   );
+};
+
+
+export const rowJustSaved = () => ({
+    type: "RowJustSaved", // required
+});
+
+const SaveNewRowButton = ({
+  dispatch
+}) => {
+  const saveNewData = () => {
+    let rowKeyValue = -1;
+    dispatch(saveNewRow(rowKeyValue, {
+      validate: true
+    }));
+  };
+  return (
+   <div className='buttons'>
+    <img
+      src='https://komarovalexander.github.io/ka-table/static/icons/save.svg'
+      className='save-cell-button'
+      alt='Save'
+      title='Save'
+      onClick={saveNewData}
+    />
+    <img
+      src='https://komarovalexander.github.io/ka-table/static/icons/close.svg'
+      className='close-cell-button'
+      alt='Cancel'
+      title='Cancel'
+      onClick={() => dispatch(hideNewRow())}
+    />
+   </div>
+ );
 };
 
 const SaveButton = ({
@@ -54,11 +103,21 @@ const SaveButton = ({
           dispatch(closeRowEditors(rowKeyValue));
         }}
       />
+        <img
+          src='https://komarovalexander.github.io/ka-table/static/icons/delete.svg'
+          className='delete-row-column-button'
+          onClick={() => dispatch(deleteRow(rowKeyValue))}
+          alt=''
+        />
    </div >
  );
 };
 
 export default class Contacts extends React.Component {
+    getNewRow = () => {
+        return this.state.props.data;
+    }
+
     constructor() {
         super();
         this.state = {
@@ -72,12 +131,9 @@ export default class Contacts extends React.Component {
                     { key: 'editColumn', style: { width: 50 } },
                 ],
                 data: [],
-                editableCells: [{
-                    columnKey: 'last_name',
-                    rowKeyValue: 2,
-                }],
                 rowKeyField:'id',
                 sortingMode: SortingMode.Single,
+                getNewRow: this.getNewRow
             }
         }
 
@@ -87,17 +143,19 @@ export default class Contacts extends React.Component {
 
     componentDidMount() {
         axios.get("http://localhost:8000/contacts/").then((res) => {
-            console.log(res.data);
             this.setState(oldState => ({
                 props: {
                     ...oldState.props,
                     data: JSON.parse(res.data).map((contact) => ({ id: contact.pk, ...contact.fields})),
                 }
             }));
-            console.log(this.state.props);
         }).catch((err) => {
             console.log(err)
         });
+    }
+
+    create = (data) => {
+        return axios.post(`http://localhost:8000/contacts/`, data);
     }
 
     update = (pk, data) => {
@@ -107,6 +165,10 @@ export default class Contacts extends React.Component {
             console.log(err);
         });
     }
+    
+    apiDelete = (pk) => {
+        return axios.delete(`http://localhost:8000/contacts/${pk}/`);
+    }
 
     dispatch = (action) => {
         this.setState(oldState => ({
@@ -114,10 +176,31 @@ export default class Contacts extends React.Component {
         }));
 
         switch (action.type) {
-            case "UpdateEditorValue":
+            case "SaveRowEditors":
+                let row = this.getRow(action.rowKeyValue).reduce((row, cell) => (row[cell.columnKey] = cell.editorValue, row) ,{});
                 this.update(action.rowKeyValue, {[action.columnKey]: action.value});
-            break;
+                break;
+            case "SaveNewRow":
+                let data = this.getNewRow().reduce((row, cell) => (row[cell.columnKey] = cell.editorValue, row) ,{});
+                this.create(JSON.stringify(data)).then((res) => {
+                    action.rowKeyValue = res.data.id;
+                }).catch((err) => {
+                    console.log(err);
+                });
+                break;
+
+            case "DeleteRow":
+                this.apiDelete(action.rowKeyValue);
+                break;
         }
+    }
+
+    getNewRow = () => {
+        return this.state.props.editableCells.filter(cell => JSON.stringify(cell.rowKeyValue) == JSON.stringify({}));
+    }
+
+    getRow = (pk) => {
+        return this.state.props.editableCells.filter(cell => cell.rowKeyValue == pk);
     }
 
 	render() {
@@ -136,7 +219,19 @@ export default class Contacts extends React.Component {
                     cellEditor: {
                         content: (props) => {
                             if (props.column.key === 'editColumn'){
-                                return <SaveButton {...props}/>
+                                // If this is a new row (without a rowkeyvalue), lets use a different save button
+                                if (JSON.stringify(props.rowKeyValue) === '{}') {
+                                    return <SaveNewRowButton {...props}/>
+                                } else {
+                                    return <SaveButton {...props}/>
+                                }
+                            }
+                        }
+                    },
+                    headCell: {
+                        content: (props) => {
+                            if (props.column.key === 'editColumn'){
+                                return <AddButton {...props}/>;
                             }
                         }
                     }
