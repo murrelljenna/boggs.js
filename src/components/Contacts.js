@@ -3,11 +3,12 @@
 // vim: set shiftwidth=4
 
 import "ka-table/style.css";
-import React, { Component, useState } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import axios from 'axios';
 
 import { ITableProps, kaReducer, Table } from 'ka-table';
 import { DataType, EditingMode, SortingMode } from 'ka-table/enums';
+import { closeEditor, updateCellValue, updateEditorValue } from 'ka-table/actionCreators';
 import { DispatchFunc } from 'ka-table/types';
 import { closeRowEditors, openRowEditors, saveRowEditors, showNewRow, saveNewRow, hideNewRow, deleteRow } from 'ka-table/actionCreators';
 
@@ -40,7 +41,6 @@ const EditButton = ({
    </div>
   );
 };
-
 
 export const rowJustSaved = () => ({
     type: "RowJustSaved", // required
@@ -113,6 +113,49 @@ const SaveButton = ({
  );
 };
 
+const AddressEditor = ({
+  column, rowKeyValue, dispatch, value,
+}) => {
+    const [buildings, setBuildings] = useState([]);
+    useEffect(() => {
+        axios.get("http://localhost:8000/buildings/").then((res) => {
+            setBuildings(JSON.parse(res.data).map(building => ({
+                address: `${building.fields.street_number} ${building.fields.street_name}`,
+                id: building.pk
+            })));
+        }).catch((err) => {
+            console.log(err)
+        });
+    }, []);
+
+    const close = () => {
+        dispatch(closeEditor(rowKeyValue, column.key));
+    };
+    const [editorValue, setValue] = useState(value);
+
+    return (
+        <div>
+          <select
+            value={editorValue}
+            className='form-control'
+            autoFocus={true}
+            defaultValue={editorValue}
+            onBlur={() => {
+                dispatch(updateEditorValue(rowKeyValue, column.key, editorValue));
+            }}
+            onChange={(event) => {
+                setValue(event.target.value);
+            }}>
+
+            <option key={5} value={'test'}>{'Test'}</option>
+            {buildings.map((building) => (
+                <option key={building.id} value={building.id}>{building.address}</option>
+            ))}
+          </select>
+        </div >
+    );
+}
+
 export default class Contacts extends React.Component {
     getNewRow = () => {
         return this.state.props.data;
@@ -177,11 +220,13 @@ export default class Contacts extends React.Component {
 
         switch (action.type) {
             case "SaveRowEditors":
-                let row = this.getRow(action.rowKeyValue).reduce((row, cell) => (row[cell.columnKey] = cell.editorValue, row) ,{});
-                this.update(action.rowKeyValue, {[action.columnKey]: action.value});
+                let row = this.getEditableRow(action.rowKeyValue).reduce((row, cell) => (row[cell.columnKey] = cell.editorValue, row) ,{});
+                this.update(action.rowKeyValue, row);
+                
                 break;
             case "SaveNewRow":
                 let data = this.getNewRow().reduce((row, cell) => (row[cell.columnKey] = cell.editorValue, row) ,{});
+                data.address = this.getRow(action.rowKeyValue).address;
                 this.create(JSON.stringify(data)).then((res) => {
                     action.rowKeyValue = res.data.id;
                 }).catch((err) => {
@@ -199,8 +244,12 @@ export default class Contacts extends React.Component {
         return this.state.props.editableCells.filter(cell => JSON.stringify(cell.rowKeyValue) == JSON.stringify({}));
     }
 
-    getRow = (pk) => {
+    getEditableRow = (pk) => {
         return this.state.props.editableCells.filter(cell => cell.rowKeyValue == pk);
+    }
+
+    getRow = (pk) => {
+        return this.state.props.data.find(row => row.id = pk);
     }
 
 	render() {
@@ -225,6 +274,8 @@ export default class Contacts extends React.Component {
                                 } else {
                                     return <SaveButton {...props}/>
                                 }
+                            } else if (props.column.key === 'address') {
+                                return <AddressEditor {...props}/>
                             }
                         }
                     },
