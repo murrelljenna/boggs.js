@@ -8,7 +8,7 @@ import axios from 'axios';
 
 import { ITableProps, kaReducer, Table } from 'ka-table';
 import { DataType, EditingMode, SortingMode } from 'ka-table/enums';
-import { closeEditor, updateCellValue, updateEditorValue } from 'ka-table/actionCreators';
+import { hideLoading, showLoading, closeEditor, updateCellValue, updateEditorValue } from 'ka-table/actionCreators';
 import { DispatchFunc } from 'ka-table/types';
 import { closeRowEditors, openRowEditors, saveRowEditors, showNewRow, saveNewRow, hideNewRow, deleteRow } from 'ka-table/actionCreators';
 
@@ -175,6 +175,10 @@ export default class Contacts extends React.Component {
                 ],
                 data: [],
                 rowKeyField:'id',
+                  loading: {
+                    enabled: true,
+                    text: 'Loading Data..'
+                  },
                 sortingMode: SortingMode.Single,
                 getNewRow: this.getNewRow
             }
@@ -185,32 +189,39 @@ export default class Contacts extends React.Component {
     }
 
     componentDidMount() {
+        this.dispatch(showLoading('Loading Data...'));
         axios.get("http://localhost:8000/contacts/").then((res) => {
             this.setState(oldState => ({
                 props: {
                     ...oldState.props,
                     data: JSON.parse(res.data).map((contact) => ({ id: contact.pk, ...contact.fields})),
                 }
+
             }));
+            this.dispatch(hideLoading());
         }).catch((err) => {
             console.log(err)
         });
     }
 
     create = (data) => {
+        this.dispatch(showLoading('Creating...'));
         return axios.post(`http://localhost:8000/contacts/`, data);
     }
 
     update = (pk, data) => {
         axios.patch(`http://localhost:8000/contacts/${pk}/`, data).then((res) => {
-            
+            this.dispatch(hideLoading());
         }).catch((err) => {
             console.log(err);
         });
     }
     
     apiDelete = (pk) => {
-        return axios.delete(`http://localhost:8000/contacts/${pk}/`);
+        axios.delete(`http://localhost:8000/contacts/${pk}/`).then(res => {
+            this.dispatch(hideLoading());
+        }).catch((err) => {
+        });
     }
 
     dispatch = (action) => {
@@ -220,6 +231,7 @@ export default class Contacts extends React.Component {
 
         switch (action.type) {
             case "SaveRowEditors":
+                this.dispatch(showLoading('Updating...'));
                 let row = this.getEditableRow(action.rowKeyValue).reduce((row, cell) => (row[cell.columnKey] = cell.editorValue, row) ,{});
                 this.update(action.rowKeyValue, row);
                 
@@ -229,12 +241,15 @@ export default class Contacts extends React.Component {
                 data.address = this.getRow(action.rowKeyValue).address;
                 this.create(JSON.stringify(data)).then((res) => {
                     action.rowKeyValue = res.data.id;
+                    this.dispatch(hideLoading());
                 }).catch((err) => {
                     console.log(err);
                 });
                 break;
 
             case "DeleteRow":
+                console.log('What');
+                this.dispatch(showLoading('Deleting Row...'));
                 this.apiDelete(action.rowKeyValue);
                 break;
         }
