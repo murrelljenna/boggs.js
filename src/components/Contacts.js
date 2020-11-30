@@ -42,10 +42,6 @@ const EditButton = ({
   );
 };
 
-export const rowJustSaved = () => ({
-    type: "RowJustSaved", // required
-});
-
 const SaveNewRowButton = ({
   dispatch
 }) => {
@@ -90,7 +86,6 @@ const SaveButton = ({
           dispatch(saveRowEditors(rowKeyValue, {
             validate: true,
             rowKeyValue: rowKeyValue,
-            rowData: rowData,
           }));
         }}
       />
@@ -131,6 +126,7 @@ const AddressEditor = ({
     const close = () => {
         dispatch(closeEditor(rowKeyValue, column.key));
     };
+
     const [editorValue, setValue] = useState(value);
 
     return (
@@ -161,17 +157,18 @@ export default class Contacts extends React.Component {
         return this.state.props.data;
     }
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+
         this.state = {
             props: { 
                 columns: [
                     { key: 'first_name', title: 'First Name', dataType: DataType.String },
                     { key: 'last_name', title: 'Last Name', dataType: DataType.String },
                     { key: 'address', title: 'Address', dataType: DataType.String },
-                    { key: 'unit_number', title: 'Unit', dataType: DataType.String },
+                    { key: 'unit_number', title: 'Unit', dataType: DataType.String, style: { width: 50 } },
                     { key: 'email_address', isEditable: true, title: 'Email Address', dataType: DataType.String },
-                    { key: 'editColumn', style: { width: 50 } },
+                    { key: 'editColumn', style: { width: 75 } },
                 ],
                 data: [],
                 rowKeyField:'id',
@@ -190,7 +187,7 @@ export default class Contacts extends React.Component {
 
     componentDidMount() {
         this.dispatch(showLoading('Loading Data...'));
-        axios.get("http://localhost:8000/contacts/").then((res) => {
+        axios.get(`http://localhost:8000${this.props.match.path}`).then((res) => {
             this.setState(oldState => ({
                 props: {
                     ...oldState.props,
@@ -206,11 +203,12 @@ export default class Contacts extends React.Component {
 
     create = (data) => {
         this.dispatch(showLoading('Creating...'));
-        return axios.post(`http://localhost:8000/contacts/`, data);
+        console.log(data);
+        return axios.post(`http://localhost:8000${this.props.match.path}`, data);
     }
 
     update = (pk, data) => {
-        axios.patch(`http://localhost:8000/contacts/${pk}/`, data).then((res) => {
+        axios.patch(`http://localhost:8000${this.props.match.path}${pk}/`, data).then((res) => {
             this.dispatch(hideLoading());
         }).catch((err) => {
             console.log(err);
@@ -218,9 +216,10 @@ export default class Contacts extends React.Component {
     }
     
     apiDelete = (pk) => {
-        axios.delete(`http://localhost:8000/contacts/${pk}/`).then(res => {
+        axios.delete(`http://localhost:8000${this.props.match.path}${pk}/`).then(res => {
             this.dispatch(hideLoading());
         }).catch((err) => {
+            console.log(err);
         });
     }
 
@@ -238,7 +237,6 @@ export default class Contacts extends React.Component {
                 break;
             case "SaveNewRow":
                 let data = this.getNewRow().reduce((row, cell) => (row[cell.columnKey] = cell.editorValue, row) ,{});
-                data.address = this.getRow(action.rowKeyValue).address;
                 this.create(JSON.stringify(data)).then((res) => {
                     action.rowKeyValue = res.data.id;
                     this.dispatch(hideLoading());

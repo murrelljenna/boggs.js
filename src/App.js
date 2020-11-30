@@ -5,6 +5,13 @@ import MainNavbar from './components/MainNavbar.js';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+const ContactsFunc = (props) => {
+    return <Contacts 
+        model={'contacts'}
+        {...props}
+    />
+}
+
 function App() {
   return (
     <div className="App">
