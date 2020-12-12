@@ -1,14 +1,14 @@
 import logo from "./logo.svg";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import Contacts from "./components/Contacts.js";
-import MainNavbar from "./components/MainNavbar.js";
+import DataTable from "./Components/DataTable.js";
+import MainNavbar from "./Components/MainNavbar.js";
 import { DataType, EditingMode, SortingMode } from "ka-table/enums";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const ContactsFunc = (props) => {
+const ContactsTable = (props) => {
   return (
-    <Contacts
+    <DataTable
       {...props}
       model={"contacts"}
       columns={[
@@ -33,9 +33,9 @@ const ContactsFunc = (props) => {
   );
 };
 
-const BuildingsFunc = (props) => {
+const BuildingsTable = (props) => {
   return (
-    <Contacts
+    <DataTable
       {...props}
       model={"buildings"}
       columns={[
@@ -57,10 +57,9 @@ function App() {
     <div className="App">
       <main>
         <MainNavbar></MainNavbar>
-
         <Switch>
-          <Route path="/contacts/" component={ContactsFunc} />
-          <Route path="/buildings/" component={BuildingsFunc} />
+          <Route path="/contacts/" component={ContactsTable} />
+          <Route path="/buildings/" component={BuildingsTable} />
         </Switch>
       </main>
     </div>
