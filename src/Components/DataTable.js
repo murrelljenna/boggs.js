@@ -16,6 +16,8 @@ import { PrimaryTextareaEditor, AddressEditor } from "./Editors.js";
 import { kaReducer, Table } from "ka-table";
 import { SortingMode } from "ka-table/enums";
 
+axios.defaults.headers.common['Authorization'] = `JWT ${localStorage.getItem('token')}`
+
 export default class DataTable extends React.Component {
   constructor(props) {
     super(props);
