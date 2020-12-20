@@ -1,7 +1,7 @@
 import { updateEditorValue } from "ka-table/actionCreators";
 
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../utils/api.js";
 
 export const PrimaryTextareaEditor = ({
   column,
@@ -32,7 +32,7 @@ export const PrimaryTextareaEditor = ({
 export const AddressEditor = ({ column, rowKeyValue, dispatch, value }) => {
   const [buildings, setBuildings] = useState([]);
   useEffect(() => {
-    axios
+    api
       .get("http://localhost:8000/buildings/")
       .then((res) => {
         setBuildings(
