@@ -1,6 +1,6 @@
 import "ka-table/style.css";
-import React, { Component } from "react";
-import axios from "axios";
+import React from "react";
+import api from "../utils/api.js";
 
 import {
   AddButton,
@@ -16,7 +16,6 @@ import { PrimaryTextareaEditor, AddressEditor } from "./Editors.js";
 import { kaReducer, Table } from "ka-table";
 import { SortingMode } from "ka-table/enums";
 
-axios.defaults.headers.common['Authorization'] = `JWT ${localStorage.getItem('token')}`
 
 export default class DataTable extends React.Component {
   constructor(props) {
@@ -43,7 +42,7 @@ export default class DataTable extends React.Component {
 
   componentDidMount() {
     this.dispatch(showLoading("Loading Data..."));
-    axios
+    api
       .get(`http://localhost:8000/${this.props.model}/`)
       .then((res) => {
         this.setState((oldState) => ({
@@ -64,11 +63,11 @@ export default class DataTable extends React.Component {
 
   create = (data) => {
     this.dispatch(showLoading("Creating..."));
-    return axios.post(`http://localhost:8000/${this.props.model}/`, data);
+    return api.post(`http://localhost:8000/${this.props.model}/`, data);
   };
 
   update = (pk, data) => {
-    axios
+    api
       .patch(`http://localhost:8000/${this.props.model}/${pk}/`, data)
       .then((res) => {
         this.dispatch(hideLoading());
@@ -80,7 +79,7 @@ export default class DataTable extends React.Component {
 
   apiDelete = (pk) => {
     this.dispatch(showLoading("Deleting Row..."));
-    axios
+    api
       .delete(`http://localhost:8000/${this.props.model}/${pk}/`)
       .then((res) => {
         this.dispatch(hideLoading());
@@ -133,18 +132,20 @@ export default class DataTable extends React.Component {
       case "DeleteRow":
         this.apiDelete(action.rowKeyValue);
         break;
+      default:
+        break;
     }
   };
 
   getNewRow = () => {
     return this.state.props.editableCells.filter(
-      (cell) => JSON.stringify(cell.rowKeyValue) == JSON.stringify({})
+      (cell) => JSON.stringify(cell.rowKeyValue) === JSON.stringify({})
     );
   };
 
   getEditableRow = (pk) => {
     return this.state.props.editableCells.filter(
-      (cell) => cell.rowKeyValue == pk
+      (cell) => cell.rowKeyValue === pk
     );
   };
 
@@ -153,7 +154,6 @@ export default class DataTable extends React.Component {
   };
 
   render() {
-    console.log(this.addButton);
     return (
       <Table
         {...this.state.props}
