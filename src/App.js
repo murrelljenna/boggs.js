@@ -11,7 +11,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 class App extends Component {
   constructor(props) {
     super(props);
-    localStorage.removeItem('token');
     this.state = {
       displayed_form: '',
       username: '',

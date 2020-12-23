@@ -11,7 +11,7 @@ import {
 
 import { hideLoading, showLoading } from "ka-table/actionCreators";
 
-import { PrimaryTextareaEditor, AddressEditor, OrganizerEditor } from "./Editors.js";
+import { PrimaryTextareaEditor, ReferenceEditor } from "./Editors.js";
 
 import { kaReducer, Table } from "ka-table";
 import { SortingMode } from "ka-table/enums";
@@ -177,9 +177,15 @@ export default class DataTable extends React.Component {
                   return <SaveButton {...props} />;
                 }
               } else if (props.column.key === "address") {
-                return <AddressEditor {...props} />;
+                return <ReferenceEditor {...props} route={"buildings/"} mapping={(building) => ({
+                    display: `${building.street_number} ${building.street_name}`,
+                    id: building.id,
+                  })}/>;
               } else if (props.column.key === "organizer") {
-                return <OrganizerEditor {...props} />;
+                return <ReferenceEditor {...props} route={"organizers/"} mapping={(object) => ({
+                  display: `${object.first_name} ${object.last_name}`,
+                  id: object.id,
+                })}/>;
               } else if (props.column.key === "first_name") {
                 return <PrimaryTextareaEditor {...props} />;
               }

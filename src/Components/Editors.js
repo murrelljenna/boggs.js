@@ -29,27 +29,25 @@ export const PrimaryTextareaEditor = ({
   );
 };
 
-export const OrganizerEditor = ({ column, rowKeyValue, dispatch, value }) => {
-  const [organizers, setOrganizers] = useState([]);
+export const ReferenceEditor = ({ column, rowKeyValue, dispatch, value, route, mapping }) => {
+  const [objects, setObjects] = useState([]);
+  console.log(route);
+  console.log(mapping);
   useEffect(() => {
     api
-      .get("http://localhost:8000/organizers/")
+      .get(`http://localhost:8000/${route}`)
       .then((res) => {
         console.log(res.data);
-        setOrganizers(
-          res.data.map((organizer) => ({
-            display: `${organizer.first_name} ${organizer.last_name}`,
-            id: organizer.id,
-          }))
+        setObjects(
+          res.data.map(mapping)
         );
-        console.log(organizers);
+        console.log(objects);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
   const [editorValue, setValue] = useState(value);
-    console.log(organizers);
   return (
     <div>
       <select
@@ -62,50 +60,9 @@ export const OrganizerEditor = ({ column, rowKeyValue, dispatch, value }) => {
           setValue(event.target.value);
         }}
       >
-        {organizers.map((organizer) => (
-          <option key={organizer.id} value={organizer.id}>
-            {organizer.display}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-};
-
-export const AddressEditor = ({ column, rowKeyValue, dispatch, value }) => {
-  const [buildings, setBuildings] = useState([]);
-  useEffect(() => {
-    api
-      .get("http://localhost:8000/buildings/")
-      .then((res) => {
-        setBuildings(
-          res.data.map((building) => ({
-            address: `${building.street_number} ${building.street_name}`,
-            id: building.id,
-          }))
-        );
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-  const [editorValue, setValue] = useState(value);
-
-  return (
-    <div>
-      <select
-        value={editorValue}
-        className="ka-input"
-        onBlur={() => {
-          dispatch(updateEditorValue(rowKeyValue, column.key, editorValue));
-        }}
-        onChange={(event) => {
-          setValue(event.target.value);
-        }}
-      >
-        {buildings.map((building) => (
-          <option key={building.id} value={building.id}>
-            {building.address}
+        {objects.map((object) => (
+          <option key={object.id} value={object.id}>
+            {object.display}
           </option>
         ))}
       </select>
