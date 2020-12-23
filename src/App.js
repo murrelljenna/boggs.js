@@ -1,7 +1,7 @@
 import { Route, Switch } from "react-router-dom";
 import { withRouter } from "react-router";
 import MainNavbar from "./Components/MainNavbar.js";
-import { ContactsTable, BuildingsTable } from "./Components/Tables.js";
+import { ContactsTable, BuildingsTable, OrganizersTable } from "./Components/Tables.js";
 import LoginForm from './Components/LoginForm';
 import { Component } from "react";
 import api from "./utils/api.js";
@@ -20,23 +20,11 @@ class App extends Component {
     };
   }
 
-  componentDidMount() {
-    if (this.state.logged_in) {
-      api.get('http://localhost:8000/current_user/', {
-        headers: {
-          Authorization: `JWT ${localStorage.getItem('token')}`
-        }
-      })
-      .then(res => {
-        this.setState({ username: res.data.username });
-      });
-    }
-  }
-
   handle_login = (e, data) => {
     e.preventDefault();
     api.post('http://localhost:8000/token-auth/', data)
       .then(res => {
+        console.log(res.data);
         localStorage.setItem('token', res.data.token);
         this.setState({
           logged_in: true,
@@ -68,6 +56,7 @@ class App extends Component {
               )}/>
               <Route path="/contacts/" component={ContactsTable} />
               <Route path="/buildings/" component={BuildingsTable} />
+              <Route path="/organizers/" component={OrganizersTable} />
             </Switch>
           </main>
         </div>

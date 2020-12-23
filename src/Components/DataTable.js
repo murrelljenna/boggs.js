@@ -11,7 +11,7 @@ import {
 
 import { hideLoading, showLoading } from "ka-table/actionCreators";
 
-import { PrimaryTextareaEditor, AddressEditor } from "./Editors.js";
+import { PrimaryTextareaEditor, AddressEditor, OrganizerEditor } from "./Editors.js";
 
 import { kaReducer, Table } from "ka-table";
 import { SortingMode } from "ka-table/enums";
@@ -48,9 +48,9 @@ export default class DataTable extends React.Component {
         this.setState((oldState) => ({
           props: {
             ...oldState.props,
-            data: JSON.parse(res.data).map((object) => ({
-              id: object.pk,
-              ...object.fields,
+            data: res.data.map((object) => ({
+              id: object.id,
+              ...object,
             })),
           },
         }));
@@ -93,6 +93,7 @@ export default class DataTable extends React.Component {
     this.setState((oldState) => ({
       props: kaReducer(oldState.props, action),
     }));
+    console.log(action);
 
     switch (action.type) {
       /*
@@ -177,6 +178,8 @@ export default class DataTable extends React.Component {
                 }
               } else if (props.column.key === "address") {
                 return <AddressEditor {...props} />;
+              } else if (props.column.key === "organizer") {
+                return <OrganizerEditor {...props} />;
               } else if (props.column.key === "first_name") {
                 return <PrimaryTextareaEditor {...props} />;
               }
@@ -185,7 +188,7 @@ export default class DataTable extends React.Component {
           headCell: {
             content: (props) => {
               if (props.column.key === "editColumn") {
-                return <AddButton setRef={this.addButton} {...props} />;
+                return <AddButton {...props} />;
               }
             },
           },

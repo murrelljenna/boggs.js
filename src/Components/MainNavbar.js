@@ -23,6 +23,7 @@ export default class MainNavbar extends React.Component {
           <Nav className="mr-auto">
             <Nav.Link href="/contacts/">Contacts</Nav.Link>
             <Nav.Link href="/buildings/">Buildings</Nav.Link>
+            <Nav.Link href="/organizers/">Organizer</Nav.Link>
             <NavDropdown title="Dropdown" id="basic-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">

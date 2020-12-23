@@ -13,6 +13,7 @@ console.log("Adding interceptors");
 api.interceptors.response.use(res => {
     return res;  
 }, err => {
+    console.log(err);
     console.log(err.response.status);
     if (err.response.status === 401) {
         window.location.replace("/login/");

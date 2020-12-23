@@ -22,6 +22,9 @@ export const ContactsTable = (props) => {
           title: "Email Address",
           dataType: DataType.String,
         },
+        {
+          key: "organizer", title: "Organizer", dataType: DataType.String
+        },
         { key: "editColumn", style: { width: 75 } },
       ]}
     />
@@ -41,6 +44,20 @@ export const BuildingsTable = (props) => {
         },
         { key: "street_name", title: "Street Name", dataType: DataType.String },
         { key: "postal_code", title: "Postal Code", dataType: DataType.String },
+        { key: "editColumn", style: { width: 75 } },
+      ]}
+    />
+  );
+};
+
+export const OrganizersTable = (props) => {
+  return (
+    <DataTable
+      {...props}
+      model={"organizers"}
+      columns={[
+        { key: "first_name", title: "First Name", dataType: DataType.String },
+        { key: "last_name", title: "Last Name", dataType: DataType.String },
         { key: "editColumn", style: { width: 75 } },
       ]}
     />

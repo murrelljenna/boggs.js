@@ -29,6 +29,49 @@ export const PrimaryTextareaEditor = ({
   );
 };
 
+export const OrganizerEditor = ({ column, rowKeyValue, dispatch, value }) => {
+  const [organizers, setOrganizers] = useState([]);
+  useEffect(() => {
+    api
+      .get("http://localhost:8000/organizers/")
+      .then((res) => {
+        console.log(res.data);
+        setOrganizers(
+          res.data.map((organizer) => ({
+            display: `${organizer.first_name} ${organizer.last_name}`,
+            id: organizer.id,
+          }))
+        );
+        console.log(organizers);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+  const [editorValue, setValue] = useState(value);
+    console.log(organizers);
+  return (
+    <div>
+      <select
+        value={editorValue}
+        className="ka-input"
+        onBlur={() => {
+          dispatch(updateEditorValue(rowKeyValue, column.key, editorValue));
+        }}
+        onChange={(event) => {
+          setValue(event.target.value);
+        }}
+      >
+        {organizers.map((organizer) => (
+          <option key={organizer.id} value={organizer.id}>
+            {organizer.display}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+};
+
 export const AddressEditor = ({ column, rowKeyValue, dispatch, value }) => {
   const [buildings, setBuildings] = useState([]);
   useEffect(() => {
@@ -36,9 +79,9 @@ export const AddressEditor = ({ column, rowKeyValue, dispatch, value }) => {
       .get("http://localhost:8000/buildings/")
       .then((res) => {
         setBuildings(
-          JSON.parse(res.data).map((building) => ({
-            address: `${building.fields.street_number} ${building.fields.street_name}`,
-            id: building.pk,
+          res.data.map((building) => ({
+            address: `${building.street_number} ${building.street_name}`,
+            id: building.id,
           }))
         );
       })
