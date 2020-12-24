@@ -31,17 +31,13 @@ export const PrimaryTextareaEditor = ({
 
 export const ReferenceEditor = ({ column, rowKeyValue, dispatch, value, route, mapping }) => {
   const [objects, setObjects] = useState([]);
-  console.log(route);
-  console.log(mapping);
   useEffect(() => {
     api
       .get(`http://localhost:8000/${route}`)
       .then((res) => {
-        console.log(res.data);
         setObjects(
           res.data.map(mapping)
         );
-        console.log(objects);
       })
       .catch((err) => {
         console.log(err);

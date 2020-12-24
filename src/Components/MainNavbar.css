@@ -1,0 +1,6 @@
+a.nav-link.active,
+a.dropdown-item.active {
+    background: #404040;
+    border-radius: 5px;
+    color: #fff !important;
+}

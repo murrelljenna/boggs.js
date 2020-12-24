@@ -23,6 +23,12 @@ export const ContactsTable = (props) => {
           dataType: DataType.String,
         },
         {
+          key: "phone_number",
+          isEditable: true,
+          title: "Phone Number",
+          dataType: DataType.String,
+        },
+        {
           key: "organizer", title: "Organizer", dataType: DataType.String
         },
         { key: "editColumn", style: { width: 75 } },
@@ -58,6 +64,21 @@ export const OrganizersTable = (props) => {
       columns={[
         { key: "first_name", title: "First Name", dataType: DataType.String },
         { key: "last_name", title: "Last Name", dataType: DataType.String },
+        { key: "editColumn", style: { width: 75 } },
+      ]}
+    />
+  );
+};
+
+export const dnkTable = (props) => {
+  return (
+    <DataTable
+      {...props}
+      model={"dnk"}
+      columns={[
+        { key: "address", title: "Address", dataType: DataType.String },
+        { key: "unit_number", title: "Unit Number", dataType: DataType.String },
+        { key: "notes", title: "Notes", dataType: DataType.String, style: { width: 200 } },
         { key: "editColumn", style: { width: 75 } },
       ]}
     />
