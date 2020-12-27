@@ -1,6 +1,7 @@
 import "ka-table/style.css";
 import React from "react";
 import api from "../utils/api.js";
+import { AllValidators } from "./Validators.js"
 
 import {
   AddButton,
@@ -10,8 +11,9 @@ import {
 } from "./Buttons.js";
 
 import { hideLoading, showLoading } from "ka-table/actionCreators";
+import { formatPhoneNumber } from "react-phone-number-input";
 
-import { PrimaryTextareaEditor, ReferenceEditor } from "./Editors.js";
+import { PhoneEditor, PrimaryTextareaEditor, ReferenceEditor } from "./Editors.js";
 
 import { kaReducer, Table } from "ka-table";
 import { SortingMode } from "ka-table/enums";
@@ -25,6 +27,13 @@ export default class DataTable extends React.Component {
       addButton: React.createRef(),
       props: {
         data: [],
+        validation: AllValidators,
+        format: ({ column, value }) => {
+            if (column.key === 'phone_number') {
+                console.log(formatPhoneNumber(value));
+                return formatPhoneNumber(value);
+            }
+        },
         columns: this.props.columns,
         rowKeyField: "id",
         loading: {
@@ -93,7 +102,6 @@ export default class DataTable extends React.Component {
     this.setState((oldState) => ({
       props: kaReducer(oldState.props, action),
     }));
-    console.log(action);
 
     switch (action.type) {
       /*
@@ -188,6 +196,8 @@ export default class DataTable extends React.Component {
                 })}/>;
               } else if (props.column.key === "first_name") {
                 return <PrimaryTextareaEditor {...props} />;
+              } else if (props.column.key === "phone_number") {
+                return <PhoneEditor {...props} />
               }
             },
           },

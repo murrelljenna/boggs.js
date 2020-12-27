@@ -1,4 +1,6 @@
 import { updateEditorValue } from "ka-table/actionCreators";
+import 'react-phone-number-input/style.css';
+import PhoneInput from 'react-phone-number-input/input';
 
 import { useEffect, useState } from "react";
 import api from "../utils/api.js";
@@ -17,8 +19,6 @@ export const PrimaryTextareaEditor = ({
       autoFocus
       value={editorValue}
       className="ka-input"
-      id="w3review"
-      name="w3review"
       onBlur={() => {
         dispatch(updateEditorValue(rowKeyValue, column.key, editorValue));
       }}
@@ -28,6 +28,24 @@ export const PrimaryTextareaEditor = ({
     ></input>
   );
 };
+
+export const PhoneEditor = ({ column, rowKeyValue, dispatch, value, route, mapping }) => {
+  const [editorValue, setValue] = useState(value);
+  console.log(editorValue);
+    
+  return (
+    <PhoneInput
+      className="ka-input"
+      defaultCountry={'CA'}
+      value={editorValue}
+      onChange={setValue}
+
+      onBlur={() => {
+        dispatch(updateEditorValue(rowKeyValue, column.key, editorValue));
+      }}
+    />
+  );
+}
 
 export const ReferenceEditor = ({ column, rowKeyValue, dispatch, value, route, mapping }) => {
   const [objects, setObjects] = useState([]);
@@ -45,7 +63,6 @@ export const ReferenceEditor = ({ column, rowKeyValue, dispatch, value, route, m
   }, []);
   const [editorValue, setValue] = useState(value);
   return (
-    <div>
       <select
         value={editorValue}
         className="ka-input"
@@ -62,6 +79,5 @@ export const ReferenceEditor = ({ column, rowKeyValue, dispatch, value, route, m
           </option>
         ))}
       </select>
-    </div>
   );
 };

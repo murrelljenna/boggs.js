@@ -13,6 +13,7 @@ export const AddButton = ({ dispatch }) => {
     <img
       tabIndex="0"
       autoFocus
+      style={{'margin-right': 'auto', 'margin-left': 'auto', 'display': 'block'}}
       src="https://komarovalexander.github.io/ka-table/static/icons/plus.svg"
       alt="Add New Row"
       title="Add New Row"
@@ -23,16 +24,15 @@ export const AddButton = ({ dispatch }) => {
 
 export const EditButton = ({ dispatch, rowKeyValue }) => {
   return (
-    <div className="edit-cell-button">
       <img
         src="https://komarovalexander.github.io/ka-table/static/icons/edit.svg"
+        style={{'margin-right': 'auto', 'margin-left': 'auto', 'display': 'block'}}
         alt="Edit Row"
         title="Edit Row"
         onClick={() => {
           dispatch(openRowEditors(rowKeyValue));
         }}
       />
-    </div>
   );
 };
 

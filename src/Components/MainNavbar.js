@@ -21,7 +21,7 @@ export default class MainNavbar extends React.Component {
   render() {
     return (
       <Navbar sticky="top" bg="light" expand="lg">
-        <Navbar.Brand href="/">Dashboard</Navbar.Brand>
+        <NavLink className="navbar-brand" exact to={"/"} activeClassName="active">Dashboard</NavLink>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">

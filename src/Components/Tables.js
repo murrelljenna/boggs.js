@@ -33,6 +33,7 @@ export const ContactsTable = (props) => {
         },
         { key: "editColumn", style: { width: 75 } },
       ]}
+
     />
   );
 };

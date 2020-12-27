@@ -1,7 +1,7 @@
 import { Route, Switch } from "react-router-dom";
 import { withRouter } from "react-router";
 import MainNavbar from "./Components/MainNavbar.js";
-import { ContactsTable, BuildingsTable, OrganizersTable } from "./Components/Tables.js";
+import { ContactsTable, BuildingsTable, OrganizersTable, dnkTable } from "./Components/Tables.js";
 import LoginForm from './Components/LoginForm';
 import { Component } from "react";
 import api from "./utils/api.js";
@@ -12,8 +12,6 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      displayed_form: '',
-      username: '',
       error: false,
       errorMessage: '',
     };
@@ -23,14 +21,11 @@ class App extends Component {
     e.preventDefault();
     api.post('http://localhost:8000/token-auth/', data)
       .then(res => {
-        console.log(res.data);
-        localStorage.setItem('token', res.data.token);
+        localStorage.setItem('token', res.data.access);
         this.setState({
           logged_in: true,
           error: false,
           errorMessage: "",
-          displayed_form: '',
-          username: res.data.user.username
         });
         this.props.history.push('/');
       })
@@ -56,6 +51,7 @@ class App extends Component {
               <Route path="/contacts/" component={ContactsTable} />
               <Route path="/buildings/" component={BuildingsTable} />
               <Route path="/organizers/" component={OrganizersTable} />
+              <Route path="/dnk/" component={dnkTable} />
             </Switch>
           </main>
         </div>
