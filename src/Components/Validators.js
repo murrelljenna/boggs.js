@@ -21,7 +21,6 @@ const ValidationErrorMessages = {
  */
 
 export const EmailValidator = (value) => {
-    console.log('EMAIL VALIDATOR');
     if (value.length > FieldLimits.EMAILADDRESS) {
         return ValidationErrorMessages.CHARLIMIT;
     } else if (!value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)) {

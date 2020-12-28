@@ -18,6 +18,24 @@ import { PhoneEditor, PrimaryTextareaEditor, ReferenceEditor } from "./Editors.j
 import { kaReducer, Table } from "ka-table";
 import { SortingMode } from "ka-table/enums";
 
+const referenceFormat = (route) => {
+    let data;
+
+    api
+      .get(`http://localhost:8000/${route}/`)
+      .then((res) => {
+        data = res.reduce((acc, object) => {
+          return {...acc, [object.id]: object}
+        })
+      })
+      .catch((err) => {
+      });
+    return (pk) => {
+        console.log(data);
+        return data[pk];
+    }
+}
+
 
 export default class DataTable extends React.Component {
   constructor(props) {
@@ -30,8 +48,11 @@ export default class DataTable extends React.Component {
         validation: AllValidators,
         format: ({ column, value }) => {
             if (column.key === 'phone_number') {
-                console.log(formatPhoneNumber(value));
                 return formatPhoneNumber(value);
+            }
+            if (column.key === 'address') {
+                let formatter = referenceFormat('buildings');
+                console.log(formatter(value));
             }
         },
         columns: this.props.columns,
