@@ -3,10 +3,12 @@ import { withRouter } from "react-router";
 import MainNavbar from "./Components/MainNavbar.js";
 import { ContactsTable, BuildingsTable, OrganizersTable, dnkTable } from "./Components/Tables.js";
 import LoginForm from './Components/LoginForm';
-import { Component } from "react";
+import React, { Component } from "react";
 import api from "./utils/api.js";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+
+const apiContext = React.createContext({});
 
 class App extends Component {
   constructor(props) {

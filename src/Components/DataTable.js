@@ -1,6 +1,6 @@
 import "ka-table/style.css";
 import React from "react";
-import api from "../utils/api.js";
+import api, {newApi} from "../utils/api.js";
 import { AllValidators } from "./Validators.js"
 
 import {
@@ -51,9 +51,24 @@ export default class DataTable extends React.Component {
                 return formatPhoneNumber(value);
             }
             if (column.key === 'address') {
-                let formatter = referenceFormat('buildings');
-                console.log(formatter(value));
+                let building = this.props.references.buildings[value];
+                console.log(this.props.references);
+                if (building) {
+                    return `${building.street_number} ${building.street_name}`;
+                } else {
+                    return value;
+                }
             }
+            if (column.key === 'organizer') {
+                let organizer = this.props.references.organizers[value];
+                console.log(this.props.references);
+                if (organizer) {
+                    return `${organizer.first_name} ${organizer.last_name}`;
+                } else {
+                    return value;
+                }
+            }
+
         },
         columns: this.props.columns,
         rowKeyField: "id",

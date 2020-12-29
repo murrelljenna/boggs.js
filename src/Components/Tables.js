@@ -1,7 +1,35 @@
 import DataTable from "./DataTable.js";
 import { DataType } from "ka-table/enums";
+import { newApi } from "../utils/api.js";
+import { useEffect, useState } from 'react';
 
 export const ContactsTable = (props) => {
+  /*
+   * Get other table data to lookup references and represent as something
+   * other than a primary key.
+   */
+  const [buildings, setBuildings] = useState({});
+  const [organizers, setOrganizers] = useState({});
+
+  useEffect(() => {
+      newApi.get("buildings").then(res => {
+          console.log(res);
+        setBuildings(res.data.reduce((obj, item) => {
+          obj[item.id] = item;
+          return obj;
+          }, {})
+        );
+      })
+
+      newApi.get("organizers").then(res => {
+        setOrganizers(res.data.reduce((obj, item) => {
+          obj[item.id] = item;
+          return obj;
+          }, {})
+        );
+      })
+  }, {});
+
   return (
     <DataTable
       {...props}
@@ -33,7 +61,7 @@ export const ContactsTable = (props) => {
         },
         { key: "editColumn", style: { width: 75 } },
       ]}
-
+      references={{buildings: buildings, organizers: organizers}}
     />
   );
 };
