@@ -18,25 +18,6 @@ import { PhoneEditor, PrimaryTextareaEditor, ReferenceEditor } from "./Editors.j
 import { kaReducer, Table } from "ka-table";
 import { SortingMode } from "ka-table/enums";
 
-const referenceFormat = (route) => {
-    let data;
-
-    api
-      .get(`http://localhost:8000/${route}/`)
-      .then((res) => {
-        data = res.reduce((acc, object) => {
-          return {...acc, [object.id]: object}
-        })
-      })
-      .catch((err) => {
-      });
-    return (pk) => {
-        console.log(data);
-        return data[pk];
-    }
-}
-
-
 export default class DataTable extends React.Component {
   constructor(props) {
     super(props);
@@ -199,6 +180,7 @@ export default class DataTable extends React.Component {
   };
 
   render() {
+    console.log(this.props.references);
     return (
       <Table
         {...this.state.props}
@@ -221,12 +203,12 @@ export default class DataTable extends React.Component {
                   return <SaveButton {...props} />;
                 }
               } else if (props.column.key === "address") {
-                return <ReferenceEditor {...props} route={"buildings/"} mapping={(building) => ({
+                return <ReferenceEditor {...props} data={this.props.references.buildings} mapping={(building) => ({
                     display: `${building.street_number} ${building.street_name}`,
                     id: building.id,
                   })}/>;
               } else if (props.column.key === "organizer") {
-                return <ReferenceEditor {...props} route={"organizers/"} mapping={(object) => ({
+                return <ReferenceEditor {...props} data={this.props.references.organizers} mapping={(object) => ({
                   display: `${object.first_name} ${object.last_name}`,
                   id: object.id,
                 })}/>;

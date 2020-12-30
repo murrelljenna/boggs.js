@@ -47,20 +47,9 @@ export const PhoneEditor = ({ column, rowKeyValue, dispatch, value, route, mappi
   );
 }
 
-export const ReferenceEditor = ({ column, rowKeyValue, dispatch, value, route, mapping }) => {
-  const [objects, setObjects] = useState([]);
-  useEffect(() => {
-    api
-      .get(`http://localhost:8000/${route}`)
-      .then((res) => {
-        setObjects(
-          res.data.map(mapping)
-        );
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+export const ReferenceEditor = ({ column, rowKeyValue, dispatch, value, mapping, data }) => {
+  console.log(data);
+  data = data.map(mapping);
   const [editorValue, setValue] = useState(value);
   return (
       <select
@@ -73,7 +62,7 @@ export const ReferenceEditor = ({ column, rowKeyValue, dispatch, value, route, m
           setValue(event.target.value);
         }}
       >
-        {objects.map((object) => (
+        {data.map((object) => (
           <option key={object.id} value={object.id}>
             {object.display}
           </option>

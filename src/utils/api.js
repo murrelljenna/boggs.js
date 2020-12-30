@@ -19,7 +19,7 @@ api.interceptors.response.use(res => {
     return err;
 });
 
-export const newApi = {
+export const cacheApi = {
     axios: api,
     cache: {},
     setCache: function(route, pk="", response) {
