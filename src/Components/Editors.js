@@ -48,8 +48,8 @@ export const PhoneEditor = ({ column, rowKeyValue, dispatch, value, route, mappi
 }
 
 export const ReferenceEditor = ({ column, rowKeyValue, dispatch, value, mapping, data }) => {
-  console.log(data);
-  data = data.map(mapping);
+  let mappedData = Object.entries(data).map(mapping);
+
   const [editorValue, setValue] = useState(value);
   return (
       <select
@@ -62,8 +62,8 @@ export const ReferenceEditor = ({ column, rowKeyValue, dispatch, value, mapping,
           setValue(event.target.value);
         }}
       >
-        {data.map((object) => (
-          <option key={object.id} value={object.id}>
+        {mappedData.map(object => (
+          <option key={object.id} value={object.display}>
             {object.display}
           </option>
         ))}

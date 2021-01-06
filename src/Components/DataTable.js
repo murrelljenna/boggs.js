@@ -203,14 +203,15 @@ export default class DataTable extends React.Component {
                   return <SaveButton {...props} />;
                 }
               } else if (props.column.key === "address") {
+                console.log(this.props.references.buildings);
                 return <ReferenceEditor {...props} data={this.props.references.buildings} mapping={(building) => ({
-                    display: `${building.street_number} ${building.street_name}`,
-                    id: building.id,
+                    display: `${building[1].street_number} ${building[1].street_name}`,
+                    id: building[1].id,
                   })}/>;
               } else if (props.column.key === "organizer") {
                 return <ReferenceEditor {...props} data={this.props.references.organizers} mapping={(object) => ({
-                  display: `${object.first_name} ${object.last_name}`,
-                  id: object.id,
+                  display: `${object[1].first_name} ${object[1].last_name}`,
+                  id: object[1].id,
                 })}/>;
               } else if (props.column.key === "first_name") {
                 return <PrimaryTextareaEditor {...props} />;
