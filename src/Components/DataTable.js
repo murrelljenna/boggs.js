@@ -2,6 +2,7 @@ import "ka-table/style.css";
 import React from "react";
 import api, {newApi} from "../utils/api.js";
 import { AllValidators } from "./Validators.js"
+import { formatPhone, formatAddress, formatOrganizer } from "./Formatters.js"
 
 import {
   AddButton,
@@ -28,28 +29,19 @@ export default class DataTable extends React.Component {
         data: [],
         validation: AllValidators,
         format: ({ column, value }) => {
-            if (column.key === 'phone_number') {
-                return formatPhoneNumber(value);
+            switch (column.key) {
+                case 'phone_number':
+                    return formatPhone(value);
+                break;
+                case 'address':
+                    let building = this.props.references.buildings[value];
+                    return building ? formatAddress(building) : value
+                break;
+                case 'organizer':
+                    let organizer = this.props.references.organizers[value];
+                    return organizer ? formatOrganizer(organizer) : value;
+                break;
             }
-            if (column.key === 'address') {
-                let building = this.props.references.buildings[value];
-                console.log(this.props.references);
-                if (building) {
-                    return `${building.street_number} ${building.street_name}`;
-                } else {
-                    return value;
-                }
-            }
-            if (column.key === 'organizer') {
-                let organizer = this.props.references.organizers[value];
-                console.log(this.props.references);
-                if (organizer) {
-                    return `${organizer.first_name} ${organizer.last_name}`;
-                } else {
-                    return value;
-                }
-            }
-
         },
         columns: this.props.columns,
         rowKeyField: "id",
