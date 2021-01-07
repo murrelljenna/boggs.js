@@ -167,10 +167,6 @@ export default class DataTable extends React.Component {
     );
   };
 
-  getRow = (pk) => {
-    return this.state.props.data.find((row) => (row.id = pk));
-  };
-
   render() {
     console.log(this.props.references);
     return (
@@ -195,7 +191,6 @@ export default class DataTable extends React.Component {
                   return <SaveButton {...props} />;
                 }
               } else if (props.column.key === "address") {
-                console.log(this.props.references.buildings);
                 return <ReferenceEditor {...props} data={this.props.references.buildings} mapping={(building) => ({
                     display: `${building[1].street_number} ${building[1].street_name}`,
                     id: building[1].id,
