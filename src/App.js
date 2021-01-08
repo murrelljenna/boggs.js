@@ -8,6 +8,8 @@ import api from "./utils/api.js";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import Paperbase from "./TemplateApp.js"
+
 const apiContext = React.createContext({});
 
 class App extends Component {
@@ -54,6 +56,7 @@ class App extends Component {
               <Route path="/buildings/" component={BuildingsTable} />
               <Route path="/organizers/" component={OrganizersTable} />
               <Route path="/dnk/" component={dnkTable} />
+              <Route path="/core/" component={Paperbase} />
             </Switch>
           </main>
         </div>

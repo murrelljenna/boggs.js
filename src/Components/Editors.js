@@ -69,3 +69,31 @@ export const ReferenceEditor = ({ column, rowKeyValue, dispatch, value, mapping,
       </select>
   );
 };
+/*
+const CustomLookupEditor = ({
+  column, dispatch,
+}) => {
+  const toNullableBoolean = (value) => {
+    switch (value) {
+      case 'true': return true;
+      case 'false': return false;
+    }
+    return value;
+  };
+  return (
+    <div>
+      <select
+        className='form-control'
+        defaultValue={column.filterRowValue}
+        onChange={(event) => {
+          dispatch(updateFilterRowValue(column.key, toNullableBoolean(event.currentTarget.value)));
+        }}>
+        <option value=''/>
+        <option value={'true'}>True</option>
+        <option value={'false'}>False</option>
+      </select>
+    </div >
+  );
+};
+*/
+
