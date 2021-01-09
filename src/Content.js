@@ -17,7 +17,7 @@ import { ContactsTable } from './Components/Tables';
 
 const styles = (theme) => ({
   paper: {
-    maxWidth: 936,
+    maxWidth: 1136,
     margin: 'auto',
     overflow: 'hidden',
   },
@@ -34,7 +34,7 @@ const styles = (theme) => ({
     marginRight: theme.spacing(1),
   },
   contentWrapper: {
-    margin: '40px 16px',
+    margin: '10px 8px',
   },
 });
 

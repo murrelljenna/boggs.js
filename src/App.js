@@ -1,4 +1,5 @@
-import { Route, Switch } from "react-router-dom";
+import { Route, Redirect, Switch } from "react-router-dom";
+import { PrivateRoute } from "./Components/PrivateRoute.js"
 import { withRouter } from "react-router";
 import MainNavbar from "./Components/MainNavbar.js";
 import { ContactsTable, BuildingsTable, OrganizersTable, dnkTable } from "./Components/Tables.js";
@@ -18,25 +19,31 @@ class App extends Component {
     this.state = {
       error: false,
       errorMessage: '',
+      currentUser: {},
+      loggedIn: false,
     };
   }
 
   handle_login = (e, data) => {
+    console.log("HARDAR");
     e.preventDefault();
     api.post('http://localhost:8000/token-auth/', data)
       .then(res => {
         localStorage.setItem('token', res.data.access);
+        console.log(this.state.loggedIn);
         this.setState({
-          logged_in: true,
+          loggedIn: true,
           error: false,
           errorMessage: "",
+          token: res.data.token,
+          currentUser: res.data.user,
         });
         this.props.history.push('/');
       })
       .catch(err => {
         console.log(err);
         this.setState({
-          logged_in: false,
+          loggedIn: false,
           error: true,
           errorMessage: 'Authentication failed',
         });
@@ -44,19 +51,17 @@ class App extends Component {
   };
 
   render() {
+
       return (
         <div className="App">
           <main>
-            <MainNavbar></MainNavbar>
             <Switch>
+              {console.log(`--- ${this.state.loggedIn}`)}
               <Route path="/login/" render={(props) => (
                 <LoginForm error={this.state.error} errorMessage={this.state.errorMessage} handle_login={this.handle_login}/>
               )}/>
-              <Route path="/contacts/" component={ContactsTable} />
-              <Route path="/buildings/" component={BuildingsTable} />
-              <Route path="/organizers/" component={OrganizersTable} />
-              <Route path="/dnk/" component={dnkTable} />
-              <Route path="/core/" component={Paperbase} />
+              <PrivateRoute loggedIn={this.state.loggedIn} path="/" Component={Paperbase} />
+              <Route path="/dnk/" component={dnkTable} />*/}
             </Switch>
           </main>
         </div>

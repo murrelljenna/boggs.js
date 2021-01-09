@@ -25,7 +25,7 @@ const categories = [
   {
     id: 'Develop',
     children: [
-      { id: 'Database', icon: <PeopleIcon />, active: true, link:"/core/contacts" },
+      { id: 'Database', icon: <PeopleIcon />, active: true, link:"/core/contacts/" },
         /*
       { id: 'Database', icon: <DnsRoundedIcon /> },
       { id: 'Storage', icon: <PermMediaOutlinedIcon /> },

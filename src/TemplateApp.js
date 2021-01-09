@@ -158,7 +158,7 @@ const styles = {
   },
   main: {
     flex: 1,
-    padding: theme.spacing(6, 4),
+    padding: theme.spacing(3, 2),
     background: '#eaeff1',
   },
   footer: {
