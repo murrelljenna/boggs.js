@@ -29,8 +29,9 @@ class App extends Component {
     e.preventDefault();
     api.post('http://localhost:8000/token-auth/', data)
       .then(res => {
+        console.log(`Just logged in. Storing ${res.data.access} in localStorage`);
         localStorage.setItem('token', res.data.access);
-        console.log(this.state.loggedIn);
+        console.log(`Just stored token. It is now ${localStorage.getItem('token')} in storage`);
         this.setState({
           loggedIn: true,
           error: false,

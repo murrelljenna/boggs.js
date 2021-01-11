@@ -1,3 +1,17 @@
 .ka-filter-row {
     display: none;
 }
+
+.ka-thead-cell {
+    color: #FFFF;
+    background-color: #009be5;
+}
+
+.ka-tbody {
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+.ka {
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+}

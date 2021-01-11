@@ -34,7 +34,7 @@ const styles = (theme) => ({
     marginRight: theme.spacing(1),
   },
   contentWrapper: {
-    margin: '10px 8px',
+    margin: '0px',
   },
 });
 
