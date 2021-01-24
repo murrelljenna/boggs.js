@@ -10,8 +10,10 @@ import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import { withStyles } from '@material-ui/core/styles';
+
 import SearchIcon from '@material-ui/icons/Search';
 import RefreshIcon from '@material-ui/icons/Refresh';
+import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 
 import { ContactsTable } from './Components/Tables';
 
@@ -60,10 +62,10 @@ function Content(props) {
               />
             </Grid>
             <Grid item>
-              <Button variant="contained" color="primary" className={classes.addUser}>
-                Add user
-              </Button>
               <Tooltip title="Reload">
+                <IconButton>
+                  <PictureAsPdfIcon className={classes.block} color="inherit" />
+                </IconButton>
                 <IconButton>
                   <RefreshIcon className={classes.block} color="inherit" />
                 </IconButton>

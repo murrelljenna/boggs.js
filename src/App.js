@@ -25,7 +25,6 @@ class App extends Component {
   }
 
   handle_login = (e, data) => {
-    console.log("HARDAR");
     e.preventDefault();
     api.post('http://localhost:8000/token-auth/', data)
       .then(res => {
