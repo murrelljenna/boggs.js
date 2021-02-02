@@ -13,6 +13,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import api from "../utils/api.js";
 
 function Copyright() {
   return (
@@ -47,10 +48,39 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const handle_login = (e, data) => {
+  e.preventDefault();
+  api.post('http://localhost:8000/token-auth/', data)
+    .then(res => {
+      console.log(`Just logged in. Storing ${res.data.access} in localStorage`);
+      localStorage.setItem('token', res.data.access);
+      console.log(`Just stored token. It is now ${localStorage.getItem('token')} in storage`);
+      this.setState({
+        loggedIn: true,
+        error: false,
+        errorMessage: "",
+        token: res.data.token,
+        currentUser: res.data.user,
+      });
+      this.props.history.push('/');
+    })
+    .catch(err => {
+      console.log(err);
+      this.setState({
+        loggedIn: false,
+        error: true,
+        errorMessage: 'Authentication failed',
+      });
+    });
+};
+
 export default function LoginForm(props) {
   const classes = useStyles();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const [error, setError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   return (
     <Container component="main" maxWidth="xs">
@@ -62,7 +92,7 @@ export default function LoginForm(props) {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate onSubmit={e => props.handle_login(e, {username: username, password: password})}>
+        <form className={classes.form} noValidate onSubmit={e => handle_login(e, {username: username, password: password})}>
           <TextField
             variant="outlined"
             margin="normal"

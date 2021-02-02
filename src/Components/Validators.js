@@ -36,11 +36,11 @@ export const PhoneValidator = (value) => {
 }
 
 export const AllValidators = ({column, value}) => {
-  if (column.key == "email_address") {
+  if (column.key === "email_address") {
     if (EmailValidator(value)) {
       return EmailValidator(value);
     }
-  } else if (column.key == "phone_number") {
+  } else if (column.key === "phone_number") {
     if (PhoneValidator(value)) {
       return PhoneValidator(value);
     }

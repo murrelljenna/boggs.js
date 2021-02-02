@@ -1,9 +1,0 @@
-a.nav-link.active,
-a.navbar-brand.active,
-a.dropdown-item.active {
-    background: #404040;
-    border-radius: 5px;
-    color: #fff !important;
-    padding-left: 6px;
-    padding-right: 6px;
-}

@@ -1,6 +1,6 @@
 import "ka-table/style.css";
 import React from "react";
-import api, {newApi} from "../utils/api.js";
+import api from "../utils/api.js";
 import { AllValidators } from "./Validators.js"
 import { formatPhone, formatAddress, formatOrganizer } from "./Formatters.js"
 
@@ -16,7 +16,6 @@ import {
 } from "./Buttons.js";
 
 import { hideLoading, showLoading } from "ka-table/actionCreators";
-import { formatPhoneNumber } from "react-phone-number-input";
 
 import { PhoneEditor, PrimaryTextareaEditor, ReferenceEditor } from "./Editors.js";
 
@@ -123,15 +122,12 @@ export default class DataTable extends React.Component {
             switch (column.key) {
                 case 'phone_number':
                     return formatPhone(value);
-                break;
                 case 'address':
                     let building = this.props.references.buildings[value];
                     return building ? formatAddress(building) : value
-                break;
                 case 'organizer':
                     let organizer = this.props.references.organizers[value];
                     return organizer ? formatOrganizer(organizer) : value;
-                break;
             }
         },
         columns: this.props.columns,
@@ -216,7 +212,6 @@ export default class DataTable extends React.Component {
           {}
         );
         this.update(action.rowKeyValue, row);
-
         break;
 
       /*

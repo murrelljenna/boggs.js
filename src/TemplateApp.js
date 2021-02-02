@@ -5,8 +5,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tab';
 import Navigator from './Navigator';
 import Content from './Content';
 import Header from './Header';

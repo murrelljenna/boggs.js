@@ -2,8 +2,7 @@ import { updateEditorValue } from "ka-table/actionCreators";
 import 'react-phone-number-input/style.css';
 import PhoneInput from 'react-phone-number-input/input';
 
-import { useEffect, useState } from "react";
-import api from "../utils/api.js";
+import { useState } from "react";
 
 export const PrimaryTextareaEditor = ({
   column,
