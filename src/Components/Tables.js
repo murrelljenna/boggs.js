@@ -1,6 +1,6 @@
 import DataTable from "./DataTable.js";
 import { DataType } from "ka-table/enums";
-import api from "../utils/api.js";
+import apiClient from "../api/apiClient.js";
 import { useEffect, useState } from 'react';
 
 export const ContactsTable = (props) => {
@@ -12,7 +12,7 @@ export const ContactsTable = (props) => {
   const [organizers, setOrganizers] = useState({});
 
   useEffect(() => {
-      api.get("buildings").then(res => {
+      apiClient.get("buildings").then(res => {
         setBuildings(res.data.reduce((obj, item) => {
           obj[item.id] = item;
           return obj;
@@ -20,7 +20,7 @@ export const ContactsTable = (props) => {
         );
       })
 
-      api.get("organizers").then(res => {
+      apiClient.get("organizers").then(res => {
         setOrganizers(res.data.reduce((obj, item) => {
           obj[item.id] = item;
           return obj;

@@ -1,6 +1,6 @@
 import "ka-table/style.css";
 import React from "react";
-import api from "../utils/api.js";
+import apiClient from "../api/apiClient.js";
 import { AllValidators } from "./Validators.js"
 import { formatPhone, formatAddress, formatOrganizer } from "./Formatters.js"
 
