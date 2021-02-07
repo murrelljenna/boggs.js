@@ -69,7 +69,7 @@ export const ReferenceEditor = ({ column, rowKeyValue, dispatch, value, mapping,
   );
 };
 /*
-const CustomLookupEditor = ({
+export const CustomLookupEditor = ({
   column, dispatch,
 }) => {
   const toNullableBoolean = (value) => {
@@ -95,4 +95,3 @@ const CustomLookupEditor = ({
   );
 };
 */
-

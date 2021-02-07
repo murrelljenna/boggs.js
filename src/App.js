@@ -25,6 +25,7 @@ class App extends Component {
               <Route path="/login/" render={(props) => (
                 <LoginForm/>
               )}/>
+
               <PrivateRoute loggedIn={this.state.loggedIn} path="/" Component={Paperbase} />
             </Switch>
           </main>
