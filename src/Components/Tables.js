@@ -1,6 +1,6 @@
 import DataTable from "./DataTable.js";
 import { DataType } from "ka-table/enums";
-import api from "../api/api.js";
+import api from "../api/axios.js";
 import { useEffect, useState } from 'react';
 
 export const ContactsTable = (props) => {
@@ -27,7 +27,7 @@ export const ContactsTable = (props) => {
           }, {})
         );
       })
-  }, {});
+  }, []);
 
   return (
     <DataTable

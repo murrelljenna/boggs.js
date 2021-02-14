@@ -12,21 +12,9 @@ import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+import { useHistory } from "react-router";
 import Container from '@material-ui/core/Container';
-import api from "../api/api.js";
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import api from "../api/axios.js";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -48,32 +36,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const handle_login = (e, data) => {
-  e.preventDefault();
-  api.post('http://localhost:8000/token-auth/', data)
-    .then(res => {
-      console.log(`Just logged in. Storing ${res.data.access} in localStorage`);
-      localStorage.setItem('token', res.data.access);
-      console.log(`Just stored token. It is now ${localStorage.getItem('token')} in storage`);
-      this.setState({
-        loggedIn: true,
-        error: false,
-        errorMessage: "",
-        token: res.data.token,
-        currentUser: res.data.user,
-      });
-      this.props.history.push('/');
-    })
-    .catch(err => {
-      console.log(err);
-      this.setState({
-        loggedIn: false,
-        error: true,
-        errorMessage: 'Authentication failed',
-      });
-    });
-};
-
 export default function LoginForm(props) {
   const classes = useStyles();
   const [username, setUsername] = useState("");
@@ -81,6 +43,22 @@ export default function LoginForm(props) {
 
   const [error, setError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const history = useHistory();
+
+    const handle_login = (e, data) => {
+      e.preventDefault();
+      api.post('http://localhost:8000/token-auth/', data)
+        .then(res => {
+          localStorage.setItem('token', res.data.access);
+          setError(false);
+          setErrorMsg("");
+          history.push('/');
+        })
+        .catch(err => {
+          setError(true);
+          setErrorMsg('Authentication failed');
+        });
+    };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -141,9 +119,6 @@ export default function LoginForm(props) {
           </Grid>
         </form>
       </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
     </Container>
   );
 }

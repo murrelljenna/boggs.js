@@ -11,10 +11,6 @@ import Paperbase from "./TemplateApp.js"
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      currentUser: {},
-      loggedIn: false,
-    };
   }
 
   render() {
@@ -22,11 +18,11 @@ class App extends Component {
         <div className="App">
           <main>
             <Switch>
-              <Route path="/login/" render={(props) => (
+              <Route path="/login/" render={() => (
                 <LoginForm/>
               )}/>
 
-              <PrivateRoute loggedIn={this.state.loggedIn} path="/" Component={Paperbase} />
+              <PrivateRoute loggedIn={true} path="/" Component={Paperbase} />
             </Switch>
           </main>
         </div>

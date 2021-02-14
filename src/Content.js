@@ -63,9 +63,6 @@ function Content(props) {
                 <IconButton>
                   <PictureAsPdfIcon className={classes.block} color="inherit" />
                 </IconButton>
-                <IconButton>
-                  <RefreshIcon className={classes.block} color="inherit" />
-                </IconButton>
               </Tooltip>
             </Grid>
           </Grid>
