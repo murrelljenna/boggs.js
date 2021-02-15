@@ -57,6 +57,60 @@ export default class DataTable extends React.Component {
         sortingMode: SortingMode.Single,
         getNewRow: this.getNewRow,
         filteringMode: FilteringMode.FilterRow,
+        dispatch: this.dispatch,
+        childComponents:{
+          cellText: {
+            content: (props) => {
+              if (props.column.key === "editColumn") {
+                return <EditButton {...props} />;
+              }
+            },
+          },
+          cellEditor: {
+            content: (props) => {
+              if (props.column.key === "editColumn") {
+                // If this is a new row (without a rowkeyvalue), lets use a different save button
+                if (JSON.stringify(props.rowKeyValue) === "{}") {
+                  return <SaveNewRowButton {...props} />;
+                } else {
+                  return <SaveButton {...props} />;
+                }
+              } else if (props.column.key === "address") {
+                return <ReferenceEditor {...props} data={this.props.references.buildings} mapping={(building) => ({
+                    display: `${building[1].street_number} ${building[1].street_name}`,
+                    id: building[1].id,
+                  })}/>;
+              } else if (props.column.key === "organizer") {
+                return <ReferenceEditor {...props} data={this.props.references.organizers} mapping={(object) => ({
+                  display: `${object[1].first_name} ${object[1].last_name}`,
+                  id: object[1].id,
+                })}/>;
+              } else if (props.column.key === "first_name") {
+                return <PrimaryTextareaEditor {...props} />;
+              } else if (props.column.key === "phone_number") {
+                return <PhoneEditor {...props} />
+              }
+            },
+          },
+          headCell: {
+            content: (props) => {
+              if (props.column.key === "editColumn") {
+                return <AddButton {...props} />;
+              }
+            },
+          },
+          filterRowCell: {
+              content: (props) => {
+                switch (props.column.key){
+                  case 'passed': return <CustomLookupEditor {...props}/>;
+                  case 'first_name': return <></>;
+                  case 'last_name': return <></>;
+                  case 'score': return <NumberEditor {...props}/>;
+                  case 'nextTry': return <DateEditor {...props}/>;
+                }
+              }
+            }
+        }
       },
     };
   }
@@ -150,60 +204,7 @@ export default class DataTable extends React.Component {
     return (
       <Table
         {...this.state.props}
-        dispatch={this.dispatch}
-        childComponents={{
-          cellText: {
-            content: (props) => {
-              if (props.column.key === "editColumn") {
-                return <EditButton {...props} />;
-              }
-            },
-          },
-          cellEditor: {
-            content: (props) => {
-              if (props.column.key === "editColumn") {
-                // If this is a new row (without a rowkeyvalue), lets use a different save button
-                if (JSON.stringify(props.rowKeyValue) === "{}") {
-                  return <SaveNewRowButton {...props} />;
-                } else {
-                  return <SaveButton {...props} />;
-                }
-              } else if (props.column.key === "address") {
-                return <ReferenceEditor {...props} data={this.props.references.buildings} mapping={(building) => ({
-                    display: `${building[1].street_number} ${building[1].street_name}`,
-                    id: building[1].id,
-                  })}/>;
-              } else if (props.column.key === "organizer") {
-                return <ReferenceEditor {...props} data={this.props.references.organizers} mapping={(object) => ({
-                  display: `${object[1].first_name} ${object[1].last_name}`,
-                  id: object[1].id,
-                })}/>;
-              } else if (props.column.key === "first_name") {
-                return <PrimaryTextareaEditor {...props} />;
-              } else if (props.column.key === "phone_number") {
-                return <PhoneEditor {...props} />
-              }
-            },
-          },
-          headCell: {
-            content: (props) => {
-              if (props.column.key === "editColumn") {
-                return <AddButton {...props} />;
-              }
-            },
-          },
-          filterRowCell: {
-              content: (props) => {
-                switch (props.column.key){
-                  case 'passed': return <CustomLookupEditor {...props}/>;
-                  case 'first_name': return <></>;
-                  case 'last_name': return <></>;
-                  case 'score': return <NumberEditor {...props}/>;
-                  case 'nextTry': return <DateEditor {...props}/>;
-                }
-              }
-            }
-        }}
+
       />
     );
   }
