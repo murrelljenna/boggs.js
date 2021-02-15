@@ -6,6 +6,8 @@ import { formatPhone, formatAddress, formatOrganizer } from "./Formatters.js"
 
 import { updateFilterRowOperator, updateFilterRowValue } from 'ka-table/actionCreators';
 
+import { hideLoading, showLoading } from "ka-table/actionCreators";
+
 import {
   AddButton,
   EditButton,
@@ -13,7 +15,7 @@ import {
   SaveButton,
 } from "./Buttons.js";
 
-import { hideLoading, showLoading } from "ka-table/actionCreators";
+//import { hideLoading, showLoading } from "ka-table/actionCreators";
 
 import { PhoneEditor, PrimaryTextareaEditor, ReferenceEditor } from "./Editors.js";
 
@@ -22,6 +24,8 @@ import { CustomLookupEditor, NumberEditor, DateEditor } from "./FilterEditors.js
 import { kaReducer, Table } from "ka-table";
 import { SortingMode, FilteringMode } from "ka-table/enums";
 
+import CRUDActions from './DataTableCRUDActions.js'
+
 import "./DataTable.css"
 
 export default class DataTable extends React.Component {
@@ -29,9 +33,8 @@ export default class DataTable extends React.Component {
     super(props);
 
     this.state = {
-      addButton: React.createRef(),
       props: {
-        data: [],
+        data: this.props.data,
         validation: AllValidators,
         format: ({ column, value }) => {
             switch (column.key) {
@@ -48,7 +51,7 @@ export default class DataTable extends React.Component {
         columns: this.props.columns,
         rowKeyField: "id",
         loading: {
-          enabled: true,
+          enabled: false,
           text: "Loading Data..",
         },
         sortingMode: SortingMode.Single,
@@ -56,10 +59,71 @@ export default class DataTable extends React.Component {
         filteringMode: FilteringMode.FilterRow,
       },
     };
-
-    this.dispatch = this.dispatch.bind(this);
-    this.update = this.update.bind(this);
   }
+
+  dispatch = (action) => {
+    this.setState((oldState) => ({
+      props: kaReducer(oldState.props, action),
+    }));
+
+    let forwardAction = {};
+
+    switch (action.type) {
+      case "SaveRowEditors":
+        let row = this.getEditableRow(action.rowKeyValue).reduce(
+          (row, cell) => ((row[cell.columnKey] = cell.editorValue), row),
+          {}
+        );
+
+        forwardAction = {
+          type: "Update",
+          rowKeyValue: action.rowKeyValue, 
+          rowData: row,
+          endpoint: this.props.model
+        }
+
+        CRUDActions(forwardAction);
+        break;
+      case "SaveNewRow":
+        let data = this.getNewRow().reduce(
+          (row, cell) => ((row[cell.columnKey] = cell.editorValue), row),
+          {}
+        );
+
+        forwardAction = {
+          type: "Create",
+          rowData: data,
+          endpoint: this.props.model
+        }
+
+        CRUDActions(forwardAction);
+        // Bunch of crap code. Might have to add this: action.rowKeyValue = res.data.id;
+        break;
+      case "DeleteRow":
+        forwardAction = {
+          type: "Delete",
+          rowKeyValue: action.rowKeyValue,
+          endpoint: this.props.model
+        }
+
+        CRUDActions(forwardAction);
+        break;
+      default:
+        break;
+    }
+  };
+
+  getNewRow = () => {
+    return this.state.props.editableCells.filter(
+      (cell) => JSON.stringify(cell.rowKeyValue) === JSON.stringify({})
+    );
+  };
+
+  getEditableRow = (pk) => {
+    return this.state.props.editableCells.filter(
+      (cell) => cell.rowKeyValue === pk
+    );
+  };
 
   componentDidMount() {
     this.dispatch(showLoading("Loading Data..."));
@@ -81,94 +145,6 @@ export default class DataTable extends React.Component {
         console.log(err);
       });
   }
-
-  create = (data) => {
-    this.dispatch(showLoading("Creating..."));
-    return api.post(`http://localhost:8000/${this.props.model}/`, data);
-  };
-
-  update = (pk, data) => {
-    api
-      .patch(`http://localhost:8000/${this.props.model}/${pk}/`, data)
-      .then((res) => {
-        this.dispatch(hideLoading());
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  apiDelete = (pk) => {
-    this.dispatch(showLoading("Deleting Row..."));
-    api
-      .delete(`http://localhost:8000/${this.props.model}/${pk}/`)
-      .then((res) => {
-        this.dispatch(hideLoading());
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  dispatch = (action) => {
-    this.setState((oldState) => ({
-      props: kaReducer(oldState.props, action),
-    }));
-    console.log(action.type)
-
-    switch (action.type) {
-      /*
-       ** Update row
-       */
-      case "SaveRowEditors":
-        this.dispatch(showLoading("Updating..."));
-        let row = this.getEditableRow(action.rowKeyValue).reduce(
-          (row, cell) => ((row[cell.columnKey] = cell.editorValue), row),
-          {}
-        );
-        this.update(action.rowKeyValue, row);
-        break;
-
-      /*
-       ** Create row
-       */
-      case "SaveNewRow":
-        let data = this.getNewRow().reduce(
-          (row, cell) => ((row[cell.columnKey] = cell.editorValue), row),
-          {}
-        );
-        this.create(JSON.stringify(data))
-          .then((res) => {
-            action.rowKeyValue = res.data.id;
-            this.dispatch(hideLoading());
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-        break;
-
-      /*
-       ** Delete row
-       */
-      case "DeleteRow":
-        this.apiDelete(action.rowKeyValue);
-        break;
-      default:
-        break;
-    }
-  };
-
-  getNewRow = () => {
-    return this.state.props.editableCells.filter(
-      (cell) => JSON.stringify(cell.rowKeyValue) === JSON.stringify({})
-    );
-  };
-
-  getEditableRow = (pk) => {
-    return this.state.props.editableCells.filter(
-      (cell) => cell.rowKeyValue === pk
-    );
-  };
 
   render() {
     return (
@@ -218,7 +194,6 @@ export default class DataTable extends React.Component {
           },
           filterRowCell: {
               content: (props) => {
-                console.log(props);
                 switch (props.column.key){
                   case 'passed': return <CustomLookupEditor {...props}/>;
                   case 'first_name': return <></>;

@@ -5,15 +5,15 @@ class API {
     }
     
     patch(model, pk, data) {
-        return this.client.patch(`${this.baseURL}/${model}/${pk}/`, data);
+        return this.client.patch(`${this.baseURL}/${model}/${pk}/`, JSON.stringify(data));
     }
 
     get(model, pk = '') {
         return this.client.get(`${this.baseURL}/${model}/${pk}`);
     }
 
-    post(model, pk, data) {
-        return this.client.post(`${this.baseURL}/${model}/`, data);
+    post(model, data) {
+        return this.client.post(`${this.baseURL}/${model}/`, JSON.stringify(data));
     }
 
     delete(model, pk) {

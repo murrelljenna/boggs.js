@@ -1,9 +1,11 @@
 import DataTable from "./DataTable.js";
 import { DataType } from "ka-table/enums";
-import api from "../api/axios.js";
-import { useEffect, useState } from 'react';
+import HTTPClient from "../api/axios.js";
+import { useEffect, useState } from "react";
 
 export const ContactsTable = (props) => {
+
+  const [data, setData] = useState([]);
   /*
    * Get other table data to lookup references and represent as something
    * other than a primary key.
@@ -12,25 +14,29 @@ export const ContactsTable = (props) => {
   const [organizers, setOrganizers] = useState({});
 
   useEffect(() => {
-      api.get("buildings").then(res => {
-        setBuildings(res.data.reduce((obj, item) => {
+    HTTPClient.get("buildings").then((res) => {
+      setBuildings(
+        res.data.reduce((obj, item) => {
           obj[item.id] = item;
           return obj;
-          }, {})
-        );
-      })
+        }, {})
+      );
+    });
 
-      api.get("organizers").then(res => {
-        setOrganizers(res.data.reduce((obj, item) => {
+    HTTPClient.get("organizers").then((res) => {
+      setOrganizers(
+        res.data.reduce((obj, item) => {
           obj[item.id] = item;
           return obj;
-          }, {})
-        );
-      })
+        }, {})
+      );
+    });
   }, []);
 
   return (
     <DataTable
+      data={data}
+      setData={setData}
       {...props}
       model={"contacts"}
       columns={[
@@ -56,11 +62,13 @@ export const ContactsTable = (props) => {
           dataType: DataType.String,
         },
         {
-          key: "organizer", title: "Organizer", dataType: DataType.String
+          key: "organizer",
+          title: "Organizer",
+          dataType: DataType.String,
         },
         { key: "editColumn", style: { width: 75 } },
       ]}
-      references={{buildings: buildings, organizers: organizers}}
+      references={{ buildings: buildings, organizers: organizers }}
     />
   );
 };
@@ -106,7 +114,12 @@ export const dnkTable = (props) => {
       columns={[
         { key: "address", title: "Address", dataType: DataType.String },
         { key: "unit_number", title: "Unit Number", dataType: DataType.String },
-        { key: "notes", title: "Notes", dataType: DataType.String, style: { width: 200 } },
+        {
+          key: "notes",
+          title: "Notes",
+          dataType: DataType.String,
+          style: { width: 200 },
+        },
         { key: "editColumn", style: { width: 75 } },
       ]}
     />
