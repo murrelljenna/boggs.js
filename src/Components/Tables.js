@@ -2,74 +2,18 @@ import DataTable from "./DataTable.js";
 import { DataType } from "ka-table/enums";
 import HTTPClient from "../api/axios.js";
 import { useEffect, useState } from "react";
+import CRUDTableReqs from "./CRUDTable/CRUDTableReqs.js";
+import CRUDTable from "./CRUDTable/CRUDTable.js";
 
 export const ContactsTable = (props) => {
-
-  const [data, setData] = useState([]);
+  
   /*
    * Get other table data to lookup references and represent as something
    * other than a primary key.
    */
-  const [buildings, setBuildings] = useState({});
-  const [organizers, setOrganizers] = useState({});
-
-  useEffect(() => {
-    HTTPClient.get("buildings").then((res) => {
-      setBuildings(
-        res.data.reduce((obj, item) => {
-          obj[item.id] = item;
-          return obj;
-        }, {})
-      );
-    });
-
-    HTTPClient.get("organizers").then((res) => {
-      setOrganizers(
-        res.data.reduce((obj, item) => {
-          obj[item.id] = item;
-          return obj;
-        }, {})
-      );
-    });
-  }, []);
 
   return (
-    <DataTable
-      data={data}
-      setData={setData}
-      {...props}
-      model={"contacts"}
-      columns={[
-        { key: "first_name", title: "First Name", dataType: DataType.String },
-        { key: "last_name", title: "Last Name", dataType: DataType.String },
-        { key: "address", title: "Address", dataType: DataType.String },
-        {
-          key: "unit_number",
-          title: "Unit",
-          dataType: DataType.String,
-          style: { width: 50 },
-        },
-        {
-          key: "email_address",
-          isEditable: true,
-          title: "Email Address",
-          dataType: DataType.String,
-        },
-        {
-          key: "phone_number",
-          isEditable: true,
-          title: "Phone Number",
-          dataType: DataType.String,
-        },
-        {
-          key: "organizer",
-          title: "Organizer",
-          dataType: DataType.String,
-        },
-        { key: "editColumn", style: { width: 75 } },
-      ]}
-      references={{ buildings: buildings, organizers: organizers }}
-    />
+    <CRUDTable/>
   );
 };
 

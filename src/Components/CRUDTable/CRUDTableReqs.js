@@ -6,6 +6,7 @@ const reducer = (obj, item) => {
 
 export default {
   buildings: {
+    model: "buildings",
     get: (client) => new Promise((resolve, reject) => {
       client.get("buildings").then((res) => {
         resolve(
@@ -16,6 +17,7 @@ export default {
   },
 
   organizers: {
+    model: "organizers",
     get: (client) => new Promise((resolve, reject) => {
       client.get("organizers").then((res) => {
         resolve(
