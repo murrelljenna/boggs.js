@@ -1,14 +1,10 @@
 import { useEffect, useState } from "react";
-import reqs from "./CRUDTableReqs.js";
 import HTTPClient from "../../api/axios.js";
 import DataTable from "../DataTable.js";
 import { DataType } from "ka-table/enums";
 
 export default (props) => {
-  // props -> reqs
-
-  const [tableProps, setTableProps] = useState({});
-  const [tableReqs, setTableReqs] = useState(reqs);
+  const [tableReqs, setTableReqs] = useState({});
 
   useEffect(() => {
     const model = props.model;
@@ -17,50 +13,27 @@ export default (props) => {
       let reqData = {};
       for (const key in reqs) {
         // TODO: Parallelize
-        reqData[key] = await reqs[key].get(HTTPClient);
+        reqData[reqs[key].model] = await reqs[key].get(HTTPClient);
       }
+      console.log(reqData);
 
       return reqData;
     }
 
-    getReqs(reqs).then(res => {
+    getReqs(props.reqs).then(res => {
       setTableReqs(res);
     });
   }, []);
+
+  if (Object.keys(tableReqs).length === 0) {
+    return (<div />);
+  }
 
   return (
     <DataTable
       {...props}
       model={"contacts"}
-      columns={[
-        { key: "first_name", title: "First Name", dataType: DataType.String },
-        { key: "last_name", title: "Last Name", dataType: DataType.String },
-        { key: "address", title: "Address", dataType: DataType.String },
-        {
-          key: "unit_number",
-          title: "Unit",
-          dataType: DataType.String,
-          style: { width: 50 },
-        },
-        {
-          key: "email_address",
-          isEditable: true,
-          title: "Email Address",
-          dataType: DataType.String,
-        },
-        {
-          key: "phone_number",
-          isEditable: true,
-          title: "Phone Number",
-          dataType: DataType.String,
-        },
-        {
-          key: "organizer",
-          title: "Organizer",
-          dataType: DataType.String,
-        },
-        { key: "editColumn", style: { width: 75 } },
-      ]}
+      columns={props.columns}
       references={tableReqs}
     />
   );

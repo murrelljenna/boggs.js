@@ -4,8 +4,37 @@ import HTTPClient from "../api/axios.js";
 import { useEffect, useState } from "react";
 import CRUDTableReqs from "./CRUDTable/CRUDTableReqs.js";
 import CRUDTable from "./CRUDTable/CRUDTable.js";
-
+console.log(CRUDTableReqs);
 export const ContactsTable = (props) => {
+  const columns = [
+    { key: "first_name", title: "First Name", dataType: DataType.String },
+    { key: "last_name", title: "Last Name", dataType: DataType.String },
+    { key: "address", title: "Address", dataType: DataType.String },
+    {
+      key: "unit_number",
+      title: "Unit",
+      dataType: DataType.String,
+      style: { width: 50 },
+    },
+    {
+      key: "email_address",
+      isEditable: true,
+      title: "Email Address",
+      dataType: DataType.String,
+    },
+    {
+      key: "phone_number",
+      isEditable: true,
+      title: "Phone Number",
+      dataType: DataType.String,
+    },
+    {
+      key: "organizer",
+      title: "Organizer",
+      dataType: DataType.String,
+    },
+    { key: "editColumn", style: { width: 75 } },
+  ]
   
   /*
    * Get other table data to lookup references and represent as something
@@ -13,7 +42,10 @@ export const ContactsTable = (props) => {
    */
 
   return (
-    <CRUDTable/>
+    <CRUDTable
+      reqs={[CRUDTableReqs.BUILDINGS, CRUDTableReqs.ORGANIZERS]}
+      columns={columns}
+    />
   );
 };
 

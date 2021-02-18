@@ -37,6 +37,7 @@ export default class DataTable extends React.Component {
         data: this.props.data,
         validation: AllValidators,
         format: ({ column, value }) => {
+            console.log(this.props.references);
             switch (column.key) {
                 case 'phone_number':
                     return formatPhone(value);

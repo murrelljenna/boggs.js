@@ -3,23 +3,14 @@ const reducer = (obj, item) => {
   return obj;
 }
 
+class CRUDTableRequirement {
+  constructor(model) {
+    this.model = model;
+  }
 
-export default {
-  buildings: {
-    model: "buildings",
-    get: (client) => new Promise((resolve, reject) => {
-      client.get("buildings").then((res) => {
-        resolve(
-          res.data.reduce(reducer, {})
-        );
-      });
-    })
-  },
-
-  organizers: {
-    model: "organizers",
-    get: (client) => new Promise((resolve, reject) => {
-      client.get("organizers").then((res) => {
+  get(client) {
+    return new Promise((resolve, reject) => {
+      client.get(this.model).then((res) => {
         resolve(
           res.data.reduce(reducer, {})
         );
@@ -27,3 +18,8 @@ export default {
     })
   }
 }
+
+export default Object.freeze({
+  BUILDINGS: new CRUDTableRequirement("buildings"),
+  ORGANIZERS: new CRUDTableRequirement("organizers"),
+});
