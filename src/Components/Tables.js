@@ -4,7 +4,7 @@ import HTTPClient from "../api/axios.js";
 import { useEffect, useState } from "react";
 import CRUDTableReqs from "./CRUDTable/CRUDTableReqs.js";
 import CRUDTable from "./CRUDTable/CRUDTable.js";
-console.log(CRUDTableReqs);
+
 export const ContactsTable = (props) => {
   const columns = [
     { key: "first_name", title: "First Name", dataType: DataType.String },
@@ -34,50 +34,56 @@ export const ContactsTable = (props) => {
       dataType: DataType.String,
     },
     { key: "editColumn", style: { width: 75 } },
-  ]
+  ];
+  const reqs = [CRUDTableReqs.BUILDINGS, CRUDTableReqs.ORGANIZERS];
+  const model = "contacts";
   
-  /*
-   * Get other table data to lookup references and represent as something
-   * other than a primary key.
-   */
-
   return (
     <CRUDTable
-      reqs={[CRUDTableReqs.BUILDINGS, CRUDTableReqs.ORGANIZERS]}
+      model={model}
+      reqs={reqs}
       columns={columns}
     />
   );
 };
 
 export const BuildingsTable = (props) => {
+  const columns = [
+    {
+      key: "street_number",
+      title: "Street Number",
+      dataType: DataType.String,
+    },
+    { key: "street_name", title: "Street Name", dataType: DataType.String },
+    { key: "postal_code", title: "Postal Code", dataType: DataType.String },
+    { key: "editColumn", style: { width: 75 } },
+  ]
+  const reqs = [];
+  const model = "buildings";
+
   return (
-    <DataTable
-      {...props}
-      model={"buildings"}
-      columns={[
-        {
-          key: "street_number",
-          title: "Street Number",
-          dataType: DataType.String,
-        },
-        { key: "street_name", title: "Street Name", dataType: DataType.String },
-        { key: "postal_code", title: "Postal Code", dataType: DataType.String },
-        { key: "editColumn", style: { width: 75 } },
-      ]}
+    <CRUDTable
+      model={model}
+      reqs={reqs}
+      columns={columns}
     />
   );
 };
 
 export const OrganizersTable = (props) => {
+  const columns = [
+    { key: "first_name", title: "First Name", dataType: DataType.String },
+    { key: "last_name", title: "Last Name", dataType: DataType.String },
+    { key: "editColumn", style: { width: 75 } },
+  ]
+  const reqs = [];
+  const model = "organizers";
+
   return (
-    <DataTable
-      {...props}
-      model={"organizers"}
-      columns={[
-        { key: "first_name", title: "First Name", dataType: DataType.String },
-        { key: "last_name", title: "Last Name", dataType: DataType.String },
-        { key: "editColumn", style: { width: 75 } },
-      ]}
+    <CRUDTable
+      model={model}
+      reqs={reqs}
+      columns={columns}
     />
   );
 };

@@ -15,7 +15,6 @@ export default (props) => {
         // TODO: Parallelize
         reqData[reqs[key].model] = await reqs[key].get(HTTPClient);
       }
-      console.log(reqData);
 
       return reqData;
     }
@@ -25,14 +24,14 @@ export default (props) => {
     });
   }, []);
 
-  if (Object.keys(tableReqs).length === 0) {
+  if (Object.keys(tableReqs).length !== props.reqs.length) {
     return (<div />);
   }
 
   return (
     <DataTable
       {...props}
-      model={"contacts"}
+      model={props.model}
       columns={props.columns}
       references={tableReqs}
     />

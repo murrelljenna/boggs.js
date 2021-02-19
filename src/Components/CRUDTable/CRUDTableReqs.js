@@ -8,14 +8,9 @@ class CRUDTableRequirement {
     this.model = model;
   }
 
-  get(client) {
-    return new Promise((resolve, reject) => {
-      client.get(this.model).then((res) => {
-        resolve(
-          res.data.reduce(reducer, {})
-        );
-      });
-    })
+  async get(client) {
+    const res = await client.get(this.model);
+    return res.data.reduce(reducer, {});
   }
 }
 
