@@ -1,7 +1,4 @@
-import DataTable from "./DataTable.js";
 import { DataType } from "ka-table/enums";
-import HTTPClient from "../api/axios.js";
-import { useEffect, useState } from "react";
 import CRUDTableReqs from "./CRUDTable/CRUDTableReqs.js";
 import CRUDTable from "./CRUDTable/CRUDTable.js";
 
@@ -84,26 +81,6 @@ export const OrganizersTable = (props) => {
       model={model}
       reqs={reqs}
       columns={columns}
-    />
-  );
-};
-
-export const dnkTable = (props) => {
-  return (
-    <DataTable
-      {...props}
-      model={"dnk"}
-      columns={[
-        { key: "address", title: "Address", dataType: DataType.String },
-        { key: "unit_number", title: "Unit Number", dataType: DataType.String },
-        {
-          key: "notes",
-          title: "Notes",
-          dataType: DataType.String,
-          style: { width: 200 },
-        },
-        { key: "editColumn", style: { width: 75 } },
-      ]}
     />
   );
 };
