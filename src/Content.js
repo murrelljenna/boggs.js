@@ -10,7 +10,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import { withStyles } from '@material-ui/core/styles';
 import { search } from 'ka-table/actionCreators';
-import { ExportPDFButton } from './Components/Buttons.js';
+import { ExportPDFButton, ExportCSVButton } from './Components/Buttons.js';
 
 import SearchIcon from '@material-ui/icons/Search';
 import RefreshIcon from '@material-ui/icons/Refresh';
@@ -64,6 +64,12 @@ function Content(props) {
             </Grid>
             <Grid item>
               <ExportPDFButton
+                classes={classes}
+                tableProps={tableProps}
+              />
+            </Grid>
+            <Grid item>
+              <ExportCSVButton
                 classes={classes}
                 tableProps={tableProps}
               />

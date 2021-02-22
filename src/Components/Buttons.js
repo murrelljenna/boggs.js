@@ -9,8 +9,12 @@ import {
 } from "ka-table/actionCreators";
 
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
+import PictureAsCsvIcon from '@material-ui/icons/GetApp';
+
+import { CSVLink } from 'react-csv';
 import Tooltip from '@material-ui/core/Tooltip';
 import { getValueByColumn } from 'ka-table/Utils/DataUtils';
+import { kaPropsUtils } from 'ka-table/utils';
 import IconButton from '@material-ui/core/IconButton';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable'
@@ -162,3 +166,25 @@ export const ExportPDFButton = (props) => {
     </Tooltip>
   );
 }
+
+export const ExportCSVButton = (props) => {
+  const { classes, tableProps } = props;
+
+  return (
+    <CSVLink
+      data={kaPropsUtils.getData(tableProps)}
+      headers={tableProps.columns.map(c => ({ label: c.title, key: c.key }))}
+      filename='table.csv'>
+      <Tooltip title="Export to CSV">
+        <IconButton>
+          <PictureAsCsvIcon
+            className={classes.block} 
+            color="inherit" 
+          />
+        </IconButton>
+      </Tooltip>
+
+    </CSVLink>
+      );
+}
+

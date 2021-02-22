@@ -15,6 +15,7 @@
     "ka-table": "^6.0.0",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.0",
+    "react-csv": "^2.0.3",
     "react-dom": "^17.0.1",
     "react-phone-number-input": "^3.1.8",
     "react-router-dom": "^5.2.0",
