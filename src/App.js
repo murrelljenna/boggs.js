@@ -3,8 +3,6 @@ import { PrivateRoute } from "./Components/PrivateRoute.js"
 import { withRouter } from "react-router";
 import LoginForm from './Components/LoginForm';
 import React, { Component } from "react";
-import "./App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 import Paperbase from "./TemplateApp.js"
 
