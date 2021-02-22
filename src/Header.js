@@ -105,23 +105,6 @@ function Header(props) {
         position="static"
         elevation={0}
       >
-        <Toolbar>
-          <Grid container alignItems="center" spacing={1}>
-            <Grid item xs>
-              <Typography color="inherit" variant="h5" component="h1">
-                Core
-              </Typography>
-            </Grid>
-          </Grid>
-        </Toolbar>
-      </AppBar>
-      <AppBar
-        component="div"
-        className={classes.secondaryBar}
-        color="primary"
-        position="static"
-        elevation={0}
-      >
         <CoreTabBar value={value} handleChange={handleChange} labels={props.labels}/>
       </AppBar>
     </React.Fragment>
