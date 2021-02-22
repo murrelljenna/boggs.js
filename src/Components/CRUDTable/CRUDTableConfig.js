@@ -6,7 +6,7 @@ import {
   EditButton,
   SaveNewRowButton,
   SaveButton,
-} from "../Buttons.js";
+} from "./Buttons/Buttons.js";
 import { CustomLookupEditor, NumberEditor, DateEditor } from "../FilterEditors.js"
 import { PhoneEditor, PrimaryTextareaEditor, ReferenceEditor } from "../Editors.js";
 import { updateFilterRowOperator, updateFilterRowValue } from 'ka-table/actionCreators';

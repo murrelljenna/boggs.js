@@ -4,8 +4,7 @@ import GetCRUDTableProps from "./CRUDTableConfig.js";
 import forwardAction from "./CRUDTableActionForwarder.js";
 import { kaReducer, Table } from "ka-table";
 import CRUDActions from "./CRUDActions.js";
-import Content from '../../Content';
-import Tooltip from '@material-ui/core/Tooltip';
+import CRUDTableToolbar from './CRUDTableToolbar';
 
 import "ka-table/style.css";
 import "./CRUDTable.css"
@@ -56,11 +55,11 @@ const CRUDTable = (props) => {
   }
 
   return (
-    <Content dispatch={dispatch} tableProps={tableProps}>
+    <CRUDTableToolbar dispatch={dispatch} tableProps={tableProps}>
       <Table
         {...tableProps}
       />
-    </Content>
+    </CRUDTableToolbar>
   );
 };
 

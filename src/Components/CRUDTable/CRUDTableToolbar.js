@@ -10,7 +10,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import { withStyles } from '@material-ui/core/styles';
 import { search } from 'ka-table/actionCreators';
-import { ExportPDFButton, ExportCSVButton } from './Components/Buttons.js';
+import { ExportPDFButton, ExportCSVButton } from './Buttons/Buttons.js';
 
 import SearchIcon from '@material-ui/icons/Search';
 import RefreshIcon from '@material-ui/icons/Refresh';
@@ -38,7 +38,7 @@ const styles = (theme) => ({
   },
 });
 
-function Content(props) {
+function CRUDTableToolbar(props) {
   const { classes, tableProps, dispatch } = props;
 
   return (
@@ -86,8 +86,8 @@ function Content(props) {
   );
 }
 
-Content.propTypes = {
+CRUDTableToolbar.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Content);
+export default withStyles(styles)(CRUDTableToolbar);
