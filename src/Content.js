@@ -9,10 +9,11 @@ import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import { withStyles } from '@material-ui/core/styles';
+import { search } from 'ka-table/actionCreators';
+import { ExportPDFButton } from './Components/Buttons.js';
 
 import SearchIcon from '@material-ui/icons/Search';
 import RefreshIcon from '@material-ui/icons/Refresh';
-import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 
 const styles = (theme) => ({
   paper: {
@@ -38,7 +39,7 @@ const styles = (theme) => ({
 });
 
 function Content(props) {
-  const { classes } = props;
+  const { classes, tableProps, dispatch } = props;
 
   return (
     <Paper className={classes.paper}>
@@ -56,14 +57,16 @@ function Content(props) {
                   disableUnderline: true,
                   className: classes.searchInput,
                 }}
+                onChange={(event) => {
+                  dispatch(search(event.currentTarget.value));
+                }}
               />
             </Grid>
             <Grid item>
-              <Tooltip title="Reload">
-                <IconButton>
-                  <PictureAsPdfIcon className={classes.block} color="inherit" />
-                </IconButton>
-              </Tooltip>
+              <ExportPDFButton
+                classes={classes}
+                tableProps={tableProps}
+              />
             </Grid>
           </Grid>
         </Toolbar>

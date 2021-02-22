@@ -6,7 +6,6 @@ import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Navigator from './Navigator';
-import Content from './Content';
 import Header from './Header';
 
 import { Route, Switch } from "react-router-dom";
@@ -200,11 +199,9 @@ function Paperbase(props) {
               <Header onDrawerToggle={handleDrawerToggle} labels={CoreLabels} />
 
               <main className={classes.main}>
-                <Content>
-                  <Route path="/core/contacts/" component={ContactsTable} />
-                  <Route path="/core/organizers/" component={OrganizersTable} />
-                  <Route path="/core/buildings/" component={BuildingsTable} />
-                </Content>
+                <Route path="/core/contacts/" component={ContactsTable} />
+                <Route path="/core/organizers/" component={OrganizersTable} />
+                <Route path="/core/buildings/" component={BuildingsTable} />
               </main>
 
             </Route>

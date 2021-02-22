@@ -8,6 +8,13 @@ import {
   saveNewRow,
 } from "ka-table/actionCreators";
 
+import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
+import Tooltip from '@material-ui/core/Tooltip';
+import { getValueByColumn } from 'ka-table/Utils/DataUtils';
+import IconButton from '@material-ui/core/IconButton';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable'
+
 export const AddButton = ({ dispatch }) => {
   return (
     <img
@@ -122,3 +129,36 @@ export const SaveButton = ({ dispatch, rowKeyValue, rowData }) => {
     </div>
   );
 };
+
+export const ExportPDFButton = (props) => {
+  const { classes, tableProps } = props;
+
+  const exportClick = orientation => {
+    const doc = new jsPDF(orientation);
+    const head = [tableProps.columns.map(c => c.title)];
+    const body = tableProps.data.map(d =>
+      tableProps.columns.map(c => getValueByColumn(d, c))
+    );
+    doc.autoTable({
+      margin: 1,
+      headStyles: { fillColor: "#F1F5F7", textColor: "#747D86" },
+      alternateRowStyles: { fillColor: "#F9FBFC" },
+      head,
+      body
+    });
+
+    doc.save("table.pdf");
+  };
+
+  return (
+    <Tooltip title="Export to PDF">
+      <IconButton>
+        <PictureAsPdfIcon 
+          className={classes.block} 
+          color="inherit" 
+          onClick={() => exportClick()}
+        />
+      </IconButton>
+    </Tooltip>
+  );
+}
