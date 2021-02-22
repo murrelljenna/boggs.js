@@ -43,15 +43,20 @@ const styles = (theme) => ({
 });
 
   const CoreTabBar = (props) => {
-    console.log(props.labels);
-  return(
-    <Tabs value={0} textColor="inherit">
-      {props.labels.map(({label, path}) => <Tab key={label} textColor="inherit" label={label} component={Link} to={path} />)};
-    </Tabs>
-  )};
+    return(
+      <Tabs value={props.value} onChange={props.handleChange} textColor="inherit" selectionFollowsFocus>
+        {props.labels.map(({label, path}) => <Tab key={label} textColor="inherit" label={label} component={Link} to={path} />)};
+      </Tabs>
+    )
+  };
 
 function Header(props) {
   const { classes, onDrawerToggle } = props;
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
   return (
     <React.Fragment>
@@ -122,7 +127,7 @@ function Header(props) {
         position="static"
         elevation={0}
       >
-        <CoreTabBar labels={props.labels}/>
+        <CoreTabBar value={value} handleChange={handleChange} labels={props.labels}/>
       </AppBar>
     </React.Fragment>
   );
