@@ -15,9 +15,9 @@ import { Link } from 'react-router-dom';
 
 const categories = [
   {
-    id: 'Develop',
+    id: 'Domain',
     children: [
-      { id: 'Database', icon: <PeopleIcon />, active: true, link:"/core/contacts/" },
+      { id: 'Core', icon: <PeopleIcon />, active: true, link:"/core/contacts/" },
         /*
       { id: 'Database', icon: <DnsRoundedIcon /> },
       { id: 'Storage', icon: <PermMediaOutlinedIcon /> },
@@ -86,31 +86,22 @@ function Navigator(props) {
 
   const { icon, primary, to } = props;
 
-const ListItemLink = React.useMemo(
-  () =>
-    React.forwardRef((linkProps, ref) => (
-      <Link ref={ref} to={to} {...linkProps} />
-    )),
-  [to],
-);
+  const ListItemLink = React.useMemo(
+    () =>
+      React.forwardRef((linkProps, ref) => (
+        <Link ref={ref} to={to} {...linkProps} />
+      )),
+    [to],
+  );
 
   return (
     <Drawer variant="permanent" {...other}>
       <List disablePadding>
         <ListItem className={clsx(classes.firebase, classes.item, classes.itemCategory)}>
-          Paperbase
-        </ListItem>
-        <ListItem className={clsx(classes.item, classes.itemCategory)}>
           <ListItemIcon className={classes.itemIcon}>
             <HomeIcon />
           </ListItemIcon>
-          <ListItemText
-            classes={{
-              primary: classes.itemPrimary,
-            }}
-          >
-            Project Overview
-          </ListItemText>
+          Boggs
         </ListItem>
         {categories.map(({ id, children }) => (
           <React.Fragment key={id}>
