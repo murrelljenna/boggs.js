@@ -10,7 +10,7 @@ import Header from './Header';
 
 import { Route, Switch } from "react-router-dom";
 
-import { ContactsTable, BuildingsTable, OrganizersTable } from './Components/Tables';
+import { ContactsTable, BuildingsTable, OrganizersTable, EventsTable } from './Components/Tables';
 
 function Copyright() {
   return (
@@ -174,7 +174,7 @@ function Paperbase(props) {
     setMobileOpen(!mobileOpen);
   };
 
-  const CoreLabels = [{label: 'Contacts', path: '/core/contacts/'}, {label: 'Buildings', path: '/core/buildings/'}, {label: 'Organizers', path: '/core/organizers'}]
+  const CoreLabels = [{label: 'Contacts', path: '/core/contacts/'}, {label: 'Buildings', path: '/core/buildings/'}, {label: 'Organizers', path: '/core/organizers'}, {label: 'Events', path: '/core/events/'}]
 
   return (
     <ThemeProvider theme={theme}>
@@ -202,6 +202,7 @@ function Paperbase(props) {
                 <Route path="/core/contacts/" component={ContactsTable} />
                 <Route path="/core/organizers/" component={OrganizersTable} />
                 <Route path="/core/buildings/" component={BuildingsTable} />
+                <Route path="/core/events/" component={EventsTable} />
               </main>
 
             </Route>

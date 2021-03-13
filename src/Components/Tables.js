@@ -84,3 +84,22 @@ export const OrganizersTable = (props) => {
     />
   );
 };
+
+export const EventsTable = (props) => {
+  const columns = [
+    { key: "name", title: "Name", dataType: DataType.String },
+    { key: "location", title: "Location", dataType: DataType.String },
+    { key: "description", title: "Description", dataType: DataType.String },
+    { key: "editColumn", style: { width: 75 } },
+  ]
+  const reqs = [];
+  const model = "events";
+
+  return (
+    <CRUDTable
+      model={model}
+      reqs={reqs}
+      columns={columns}
+    />
+  );
+};
