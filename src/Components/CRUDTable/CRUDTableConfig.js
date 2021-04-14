@@ -1,5 +1,5 @@
 import { AllValidators } from "../Validators.js"
-import formatter from "../Formatters.js"
+import CRUDTableFormat from "../Formatters.js"
 import { SortingMode, FilteringMode } from "ka-table/enums";
 import {
   AddButton,
@@ -8,13 +8,11 @@ import {
   SaveButton,
 } from "./Buttons/Buttons.js";
 import { CustomLookupEditor, NumberEditor, DateEditor } from "../FilterEditors.js"
-import { PhoneEditor, PrimaryTextareaEditor, ReferenceEditor } from "../Editors.js";
-import { updateFilterRowOperator, updateFilterRowValue } from 'ka-table/actionCreators';
-
-const GetCRUDTableProps = (references) => ({
+import { updateFilterRowOperator, updateFilterRowValue, hideDetailsRow, showDetailsRow } from 'ka-table/actionCreators';
+const GetCRUDTableProps = (DetailsRow) => ({
   data: [],
   validation: AllValidators, 
-  format: formatter(references),
+  format: CRUDTableFormat,
   columns: [],
   rowKeyField: "id",
   loading: {
@@ -24,6 +22,29 @@ const GetCRUDTableProps = (references) => ({
   sortingMode: SortingMode.Single,
   filteringMode: FilteringMode.FilterRow,
   childComponents:{
+    dataRow: {
+      elementAttributes: (() => {
+        let detailsShown = false;
+        return () => ({
+          onClick: (event, extendedEvent) => {
+            if (detailsShown) {
+              extendedEvent.dispatch(showDetailsRow(extendedEvent.childProps.rowKeyValue));
+            } else {
+              extendedEvent.dispatch(hideDetailsRow(extendedEvent.childProps.rowKeyValue));
+            }
+            detailsShown = !detailsShown;
+          },
+        })
+      })()
+    },
+    detailsRow: {
+      elementAttributes: () => ({
+        style: {
+          backgroundColor: '#eee'
+        }
+      }),
+      content: DetailsRow
+    },
     cellText: {
       content: (props) => {
         if (props.column.key === "editColumn") {
@@ -32,32 +53,18 @@ const GetCRUDTableProps = (references) => ({
       },
     },
     cellEditor: {
-      content: ((references) => {
-        return (props) => {
-          if (props.column.key === "editColumn") {
-            // If this is a new row (without a rowkeyvalue), lets use a different save button
-            if (JSON.stringify(props.rowKeyValue) === "{}") {
-              return <SaveNewRowButton {...props} />;
-            } else {
-              return <SaveButton {...props} />;
-            }
-          } else if (props.column.key === "address") {
-            return <ReferenceEditor {...props} data={references.buildings} mapping={(building) => ({
-                display: `${building[1].street_number} ${building[1].street_name}`,
-                id: building[1].id,
-              })}/>;
-          } else if (props.column.key === "organizer") {
-            return <ReferenceEditor {...props} data={references.organizers} mapping={(object) => ({
-              display: `${object[1].first_name} ${object[1].last_name}`,
-              id: object[1].id,
-            })}/>;
-          } else if (props.column.key === "first_name") {
-            return <PrimaryTextareaEditor {...props} />;
-          } else if (props.column.key === "phone_number") {
-            return <PhoneEditor {...props} />
+      content: (props) => {
+        if (props.column.editor) {
+          return props.column.editor(props);
+        } else if (props.column.key === "editColumn") {
+          // If this is a new row (without a rowkeyvalue), lets use a different save button
+          if (JSON.stringify(props.rowKeyValue) === "{}") {
+            return <SaveNewRowButton {...props} />;
+          } else {
+            return <SaveButton {...props} />;
           }
         }
-      })(references),
+      },
     },
     headCell: {
       content: (props) => {

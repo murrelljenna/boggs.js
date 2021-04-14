@@ -10,7 +10,7 @@ import Header from './Header';
 
 import { Route, Switch } from "react-router-dom";
 
-import { ContactsTable, BuildingsTable, OrganizersTable, EventsTable } from './Components/Tables';
+import { CallEffortTable, ContactsTable, BuildingsTable, OrganizersTable, EventsTable } from './Components/Tables';
 
 function Copyright() {
   return (
@@ -203,6 +203,14 @@ function Paperbase(props) {
                 <Route path="/core/organizers/" component={OrganizersTable} />
                 <Route path="/core/buildings/" component={BuildingsTable} />
                 <Route path="/core/events/" component={EventsTable} />
+              </main>
+
+            </Route>
+            <Route path="/efforts">
+              <Header onDrawerToggle={handleDrawerToggle} labels={CoreLabels} />
+
+              <main className={classes.main}>
+                <Route path="/efforts/calls" component={CallEffortTable} />
               </main>
 
             </Route>

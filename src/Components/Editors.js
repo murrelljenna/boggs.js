@@ -30,7 +30,6 @@ export const PrimaryTextareaEditor = ({
 
 export const PhoneEditor = ({ column, rowKeyValue, dispatch, value, route, mapping }) => {
   const [editorValue, setValue] = useState(value);
-  console.log(editorValue);
     
   return (
     <PhoneInput
@@ -46,8 +45,30 @@ export const PhoneEditor = ({ column, rowKeyValue, dispatch, value, route, mappi
   );
 }
 
+export const OptionEditor = ({ column, rowKeyValue, dispatch, options, value}) => {
+  const [editorValue, setValue] = useState(value);
+  return (
+      <select
+        value={editorValue}
+        className="ka-input"
+        onBlur={() => {
+          dispatch(updateEditorValue(rowKeyValue, column.key, editorValue));
+        }}
+        onChange={(event) => {
+          setValue(event.target.value);
+        }}
+      >
+        {options.map(option => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+  );
+};
+
 export const ReferenceEditor = ({ column, rowKeyValue, dispatch, value, mapping, data }) => {
-  let mappedData = Object.entries(data).map(mapping);
+  const mappedData = Object.entries(data).map(mapping);
   const [editorValue, setValue] = useState(value);
   return (
       <select
@@ -68,6 +89,24 @@ export const ReferenceEditor = ({ column, rowKeyValue, dispatch, value, mapping,
       </select>
   );
 };
+
+export const ReferenceEditorClosure = (data, mapping) => (props) => (<ReferenceEditor {...props} data={data} mapping={mapping} />)
+
+export const ReferenceEditorMappings = Object.freeze({
+  CONTACT: (object) => ({
+    display: `${object[1].first_name} ${object[1].last_name}`,
+    id: object[1].id,
+  }),
+  ORGANIZER: (object) => ({
+    display: `${object[1].first_name} ${object[1].last_name}`,
+    id: object[1].id,
+  }),
+  BUILDING: (building) => ({
+    display: `${building[1].street_number} ${building[1].street_name}`,
+    id: building[1].id,
+  })
+});
+
 /*
 export const CustomLookupEditor = ({
   column, dispatch,

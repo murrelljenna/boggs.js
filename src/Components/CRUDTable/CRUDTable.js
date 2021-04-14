@@ -9,16 +9,6 @@ import CRUDTableToolbar from './CRUDTableToolbar';
 import "ka-table/style.css";
 import "./CRUDTable.css"
 
-const getReqs = async (reqs) => {
-  let reqData = {};
-  for (const key in reqs) {
-    // TODO: Parallelize
-    reqData[reqs[key].model] = await reqs[key].get(HTTPClient);
-  }
-
-  return reqData;
-}
-
 const getData = async (model) => HTTPClient.get(`${model}/`);
 
 const CRUDTable = (props) => {
@@ -34,21 +24,16 @@ const CRUDTable = (props) => {
   }
 
   useEffect(() => {
-    getReqs(props.reqs).then(res => {
-      let tablePropsInit = GetCRUDTableProps(res);
+    getData(props.route).then(res => {
+      let tablePropsInit = GetCRUDTableProps(props.DetailsRow);
 
       tablePropsInit.columns = props.columns;
       tablePropsInit.dispatch = dispatch;
 
-      getData(props.model).then(res => {
-        tablePropsInit.data = res.data;
-        setTableProps(tablePropsInit);
-      });
+      tablePropsInit.data = res.data;
+      setTableProps(tablePropsInit);
     });
-
   }, []);
-
-
 
   if (tableProps.data.length === 0) {
     return (<div />);

@@ -8,8 +8,13 @@ class API {
         return this.client.patch(`${this.baseURL}/${model}/${pk}/`, JSON.stringify(data));
     }
 
-    get(model, pk = '') {
-        return this.client.get(`${this.baseURL}/${model}/${pk}`);
+    get(model, pk = undefined) {
+        console.log(pk);
+        if (pk === undefined) {
+            return this.client.get(`${this.baseURL}/${model}/`);
+        } else {
+            return this.client.get(`${this.baseURL}/${model}/${pk}/`);
+        }
     }
 
     post(model, data) {
@@ -17,7 +22,7 @@ class API {
     }
 
     delete(model, pk) {
-        return this.client.delete(`${this.baseURL}/${model}/${pk}`);
+        return this.client.delete(`${this.baseURL}/${model}/${pk}/`);
     }
 }
 
