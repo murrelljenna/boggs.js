@@ -1,22 +1,23 @@
 import { DataType } from "ka-table/enums";
-import CRUDTableReqs from "./CRUDTable/CRUDTableReqs.js";
-import HTTPClient from "../api/axios.js";
 import CRUDTable from "./CRUDTable/CRUDTable.js";
 import { OptionEditor, PhoneEditor, PrimaryTextareaEditor, ReferenceEditorClosure, ReferenceEditorMappings} from "./Editors.js";
 import { useEffect, useState } from "react";
 import { formatAddress, formatLookup, formatOrganizer } from "./Formatters.js";
 import { formatPhoneNumber } from "react-phone-number-input";
+import boggs, { asLookup } from "../api/boggs.js";
 
 export const ContactsTable = (props) => {
   const [organizers, setOrganizers] = useState({});
   const [buildings, setBuildings] = useState({});
+  const api = boggs.CONTACTS;
+
   useEffect(() => {
-    CRUDTableReqs.ORGANIZERS.get(HTTPClient).then(res => {
-      setOrganizers(res);
+    boggs.ORGANIZERS.get().then(res => {
+      setOrganizers(asLookup(res.data));
     });
 
-    CRUDTableReqs.BUILDINGS.get(HTTPClient).then(res => {
-      setBuildings(res);
+    boggs.BUILDINGS.get().then(res => {
+      setBuildings(asLookup(res.data));
     });
   }, []);
 
@@ -57,9 +58,6 @@ export const ContactsTable = (props) => {
     },
     { key: "editColumn", style: { width: 75 } },
   ];
-  const reqs = [CRUDTableReqs.BUILDINGS, CRUDTableReqs.ORGANIZERS];
-  const route = "contacts";
-  const model = "contacts";
   const DetailsRow = () => {
     return (
       <p>TODO: Make this a thing</p>
@@ -68,9 +66,7 @@ export const ContactsTable = (props) => {
   
   return (
     <CRUDTable
-      model={model}
-      route={route}
-      reqs={reqs}
+      api={api}
       columns={columns}
       DetailsRow={DetailsRow}
     />
@@ -88,9 +84,7 @@ export const BuildingsTable = (props) => {
     { key: "postal_code", title: "Postal Code", dataType: DataType.String },
     { key: "editColumn", style: { width: 75 } },
   ]
-  const reqs = [];
-  const route = "buildings";
-  const model = "buildings";
+  const api =  boggs.BUILDINGS
   const DetailsRow = () => {
     return (
       <p>TODO: Make this a thing</p>
@@ -99,9 +93,7 @@ export const BuildingsTable = (props) => {
 
   return (
     <CRUDTable
-      model={model}
-      route={route}
-      reqs={reqs}
+      api={api}
       columns={columns}
       DetailsRow={DetailsRow}
     />
@@ -114,9 +106,7 @@ export const OrganizersTable = (props) => {
     { key: "last_name", title: "Last Name", dataType: DataType.String },
     { key: "editColumn", style: { width: 75 } },
   ]
-  const reqs = [];
-  const route = "organizers";
-  const model = "organizers";
+  const api = boggs.ORGANIZERS;
   const DetailsRow = () => {
     return (
       <p>TODO: Make this a thing</p>
@@ -125,9 +115,7 @@ export const OrganizersTable = (props) => {
 
   return (
     <CRUDTable
-      model={model}
-      route={route}
-      reqs={reqs}
+      api={api}
       columns={columns}
       DetailsRow={DetailsRow}
     />
@@ -141,9 +129,7 @@ export const EventsTable = (props) => {
     { key: "description", title: "Description", dataType: DataType.String },
     { key: "editColumn", style: { width: 75 } },
   ]
-  const reqs = [];
-  const route = "events";
-  const model = "events";
+  const api = boggs.EVENTS;
   const DetailsRow = () => {
     return (
       <p>TODO: Make this a thing</p>
@@ -152,9 +138,7 @@ export const EventsTable = (props) => {
 
   return (
     <CRUDTable
-      model={model}
-      route={route}
-      reqs={reqs}
+      api={api}
       columns={columns}
       DetailsRow={DetailsRow}
     />
@@ -167,20 +151,12 @@ export const CallEffortTable = (props) => {
     { key: "created_at", title: "Date Created", dataType: DataType.String },
     { key: "editColumn", style: { width: 75 } },
   ]
-  const reqs = [];
-  const route = "efforts/calls";
-  const model = "efforts/calls";
-  const DetailsRow = () => {
-    return (
-      <p>TODO: Make this a thing</p>
-    );  
-  };
+
+  const api = boggs.CALLEFFORTS;
 
   return (
     <CRUDTable
-      model={model}
-      route={route}
-      reqs={reqs}
+      api={api}
       columns={columns}
       DetailsRow={CallEffortActivitiesTable}
     />
@@ -192,16 +168,16 @@ export const CallEffortActivitiesTable = (props) => {
   const [buildings, setBuildings] = useState({});
 
   useEffect(() => {
-    CRUDTableReqs.ACTIVITYCODES.get(HTTPClient).then(res => {
+    boggs.ACTIVITYCODES.get().then(res => {
       setCallActivityCodes(res);
-    });
 
-    CRUDTableReqs.BUILDINGS.get(HTTPClient).then(res => {
-      setBuildings(res);
+      boggs.BUILDINGS.get().then(res => {
+        setBuildings(asLookup(res.data));
+      });
     });
   }, []);
 
-  if (Object.keys(callActivityCodes).length === 0 && Object.keys(buildings).length === 0) {
+  if (Object.keys(callActivityCodes).length === 0 || Object.keys(buildings).length === 0) {
     return (<div />); // TODO: Render a loading thingie
   }
 
@@ -230,10 +206,14 @@ export const CallEffortActivitiesTable = (props) => {
     { key: "editColumn", style: { width: 75 } },
   ];
 
-
-  const reqs = [CRUDTableReqs.CONTACTS, CRUDTableReqs.BUILDINGS];
-  const route = `efforts/calls/${props.rowData.id}`;
-  const model = `efforts/calls`;
+  const api = boggs.CALLEFFORTACTIVITIES
+  const getClosure = () => api.get(props.rowData.id);
+  const apiWrapper = {
+    get: getClosure,
+    patch: api.patch,
+    post: api.post,
+    delete: api.delete
+  }
   const DetailsRow = () => {
     return (
       <p>TODO: Make this a thing</p>
@@ -242,9 +222,7 @@ export const CallEffortActivitiesTable = (props) => {
 
   return (
     <CRUDTable
-      model={model}
-      route={route}
-      reqs={reqs}
+      api={apiWrapper}
       columns={columns}
       DetailsRow={DetailsRow}
     />
